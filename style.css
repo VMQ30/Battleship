@@ -9,4 +9,53 @@ header{
     background-color: rgba(0,0,0,0.6);
     width: 100vw;
     height: 10vh;
+    margin: 10px 0;
+}
+
+main{
+    display: flex;
+    justify-content: center;
+}
+.main-content{
+    display: flex;
+    justify-content: center;
+}
+
+.main-battle{
+    width: 100%;
+}
+.letter-header{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.battle-area{
+    display: flex;
+    
+}
+.battle-grid{
+    width: 70vh;
+    height: 70vh;
+    background-color: rgba(0,0,0,0.6);
+    display: grid;
+    grid-template-columns: repeat(11, 1fr);
+    grid-template-rows: repeat(11, 1fr);
+}
+
+.battle-grid div{
+    background-color: aqua;
+    height: 100%;
+    width: 100%;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor:crosshair;
+}
+
+.battle-grid .header{
+    background-color: transparent;
+    border:none;
+    color: white;
+    cursor:auto
 }
