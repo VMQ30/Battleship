@@ -4,9 +4,10 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>BattleShip</title>
-        <link href = 'style.css' rel = 'stylesheet'
+        <link href = 'style.css' rel = 'stylesheet'>
     </head>
     <body>
+        
         <header>
             <img class = 'npc-icon'>
             <p class = 'npc-dialogue'>Plan our formation by mapping out our ships on the grid</p>
@@ -14,13 +15,12 @@
 
         <main>
             <div class = 'main-content'>
-                <div class = 'main-battle'>
-                    <div class = 'ship-rotation'>
-                        <button class = 'horizontal'>X Axis</button>
-                        <button class = 'vertical'>Y Axis</button>
-                    </div>
+                <div class = 'ship-rotation'>
+                    <button class = 'horizontal'>X Axis</button>
+                    <button class = 'vertical'>Y Axis</button>
+                </div>
 
-        
+                <div class = 'main-battle'>    
                     <div class = 'battle-area'>
                         <div class = 'battle-grid'>
                             <div class = 'header'>s</div>
@@ -146,27 +146,23 @@
                             <div></div>
                         </div>
                     </div>
-                </div>
 
-                <div class = 'ship-sidebar'>
-                    <div class = 'ships'>
-                        <h3>Carrier</h3>
-                    </div>
-
-                    <div class = 'ships'>
-                        <h3>Battleship</h3>
-                    </div>
-
-                    <div class = 'ships'>
-                        <h3>Cruiser</h3>
-                    </div>
-
-                    <div class = 'ships'>
-                        <h3>Submarine</h3>
-                    </div>
-
-                    <div class = 'ships'>
-                        <h3>Destroyer</h3>
+                    <div class = 'ship-sidebar'>
+                        <div class = 'ships'>
+                            <h3>Carrier</h3>
+                        </div>
+                        <div class = 'ships'>
+                            <h3>Battleship</h3>
+                        </div>
+                        <div class = 'ships'>
+                            <h3>Cruiser</h3>
+                        </div>
+                        <div class = 'ships'>
+                            <h3>Submarine</h3>
+                        </div>
+                        <div class = 'ships'>
+                            <h3>Destroyer</h3>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -176,5 +172,7 @@
             <button class = 'reset'>Reset</button>
             <button class = 'Confirm'>Confirm</button>
         </footer>
+
+        <div class = 'overlay'></div>
     </body>
 </html>

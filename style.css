@@ -4,35 +4,71 @@
     box-sizing: border-box;
 }
 
-header{
+html{
+    margin: 0;
+    padding: 0;
+}
+.overlay{
+    height: 100%;
+    width: 100vw;
+    background-color: rgba(0,0,0,0.4);
+    position: fixed;
+    top:0;
+    left:0;
+    z-index: 0;
+}
+
+body{
+    background-image: url('./water.jpg');
+    padding: 10px 10vw;
+    background-repeat: no-repeat;
+    background-size: cover;
+    backdrop-filter: blur(4px);
+}
+
+header, footer{
     display: flex;
     background-color: rgba(0,0,0,0.6);
-    width: 100vw;
     height: 10vh;
-    margin: 10px 0;
+    justify-content: center;
+    align-items: center;
+    position:relative;
+    z-index: 10;
+    color:white
 }
 
 main{
     display: flex;
     justify-content: center;
+    position: relative;
+    z-index: 10;
+    margin: 10px 0;
 }
+
 .main-content{
+    background-color: rgba(0,0,0,0.6);
+    width: 80vw;
+    padding: 20px;
+}
+
+.ship-rotation{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.ship-rotation button{
+    margin-right: 10px;
+    padding: 10px 50px;
+    cursor: pointer;
+}
+
+.main-battle{
     display: flex;
     justify-content: center;
 }
 
-.main-battle{
-    width: 100%;
-}
-.letter-header{
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-}
-.battle-area{
-    display: flex;
-    
-}
 .battle-grid{
     width: 70vh;
     height: 70vh;
@@ -40,6 +76,17 @@ main{
     display: grid;
     grid-template-columns: repeat(11, 1fr);
     grid-template-rows: repeat(11, 1fr);
+    margin-right: 10px;
+}
+
+.letter-header{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.battle-area{
+    display: flex;
 }
 
 .battle-grid div{
@@ -59,3 +106,18 @@ main{
     color: white;
     cursor:auto
 }
+
+.ship-sidebar{
+    display: grid;
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.ships{
+    background-color: aqua;
+    border: 1px solid black;    
+    cursor: move;
+}
+
