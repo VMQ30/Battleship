@@ -58,10 +58,25 @@ main{
     padding-bottom: 10px;
 }
 
-.ship-rotation button{
-    margin-right: 10px;
+button{
+    margin-right: 20px;
     padding: 10px 50px;
     cursor: pointer;
+    background: transparent;
+    color:white;
+    box-shadow: inset 3px 3px 10px rgba(255, 255, 255, 0.4),
+                inset -3px -3px 10px rgba(17, 17, 17, 0.448),
+                5px 5px 5px rgba(0,0,0,0.6);
+    border:none;
+    transition: ease 0.3s;
+}
+
+button:hover{
+    transform: scale(1.1);
+}
+
+button:active{
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 .main-battle{
@@ -72,14 +87,14 @@ main{
 .battle-grid{
     width: 70vh;
     height: 70vh;
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0,0,0,0.4);
     display: grid;
     grid-template-columns: repeat(11, 1fr);
     grid-template-rows: repeat(11, 1fr);
     margin-right: 10px;
 }
 
-.letter-header{
+header.letter-{
     display: flex;
     width: 100%;
     justify-content: space-between;
@@ -90,14 +105,25 @@ main{
 }
 
 .battle-grid div{
-    background-color: aqua;
+    background-color:transparent;
     height: 100%;
     width: 100%;
-    border: 1px solid black;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
     cursor:crosshair;
+    transition: ease 0.3s;
+}
+
+.battle-grid div:hover{
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.07);
+}
+
+.battle-grid .header:hover{
+    background-color: transparent;
+    transform: unset;
 }
 
 .battle-grid .header{
