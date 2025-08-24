@@ -1,7 +1,11 @@
+/* Entire HTML */
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: fantasy;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 html{
@@ -17,6 +21,7 @@ body{
     backdrop-filter: blur(4px);
 }
 
+/*Headers and Footers*/
 header, footer{
     display: flex;
     background-color: rgba(0,0,0,0.6);
@@ -25,9 +30,10 @@ header, footer{
     align-items: center;
     position:relative;
     z-index: 10;
-    color:white
+
 }
 
+/*Main Content*/
 main{
     display: flex;
     justify-content: center;
@@ -42,34 +48,7 @@ main{
     padding: 20px;
 }
 
-.ship-rotation{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-bottom: 10px;
-}
-
-button{
-    margin-right: 20px;
-    padding: 10px 50px;
-    cursor: pointer;
-    background: transparent;
-    color:white;
-    box-shadow: inset 3px 3px 10px rgba(255, 255, 255, 0.4),
-                inset -3px -3px 10px rgba(17, 17, 17, 0.448),
-                5px 5px 5px rgba(0,0,0,0.6);
-    border:none;
-    transition: ease 0.3s;
-}
-
-button:hover{
-    transform: scale(1.1);
-}
-
-button:active{
-    background-color: rgba(255, 255, 255, 0.4);
-}
-
+/* Grid part */
 .main-battle{
     display: flex;
     justify-content: center;
@@ -85,11 +64,11 @@ button:active{
     margin-right: 10px;
 }
 
-header.letter-{
+/* header.letter-{
     display: flex;
     width: 100%;
     justify-content: space-between;
-}
+} */
 
 .battle-area{
     display: flex;
@@ -120,10 +99,10 @@ header.letter-{
 .battle-grid .header{
     background-color: transparent;
     border:none;
-    color: white;
     cursor:auto
 }
 
+/* sidebar */
 .ship-sidebar{
     display: grid;
     grid-template-columns: 1fr;
@@ -136,6 +115,50 @@ header.letter-{
     background-color: transparent;
     border: 1px solid black;    
     cursor: move;
+    transition: ease 0.3s;
+}
+
+.ships h3{
+    font-weight: 300;
+    transition: ease 0.3s;
+}
+
+.ships:hover h3{
+    color: rgba(255, 255, 255, 1);
+}
+
+.ships:hover{
+    transform: scale(1.05);
+}
+
+/* main content header */
+.ship-rotation{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+/* Buttons */
+button{
+    margin-right: 20px;
+    padding: 10px 50px;
+    cursor: pointer;
+    background: transparent;
+    box-shadow: inset 3px 3px 10px rgba(255, 255, 255, 0.4),
+                inset -3px -3px 10px rgba(17, 17, 17, 0.448),
+                5px 5px 5px rgba(0,0,0,0.6);
+    border:none;
+    transition: ease 0.3s;
+}
+
+button:hover{
+    transform: scale(1.05);
+    color: white;
+}
+
+button:active{
+    background-color: rgba(255, 255, 255, 0.4);
 }
 
 ::selection{
