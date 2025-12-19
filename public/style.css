@@ -1,0 +1,113 @@
+:root {
+    --background: #0a1219;
+    --foreground: #eff3f5;
+    --card: #111d27;
+
+    --primary-teal: #23b5c3;
+    --secondary: #1c2d3d;
+    --accent: #e85a32;
+
+    --muted: #212f3d;
+    --muted-foreground: #8a9ba3;
+    --border: #2d3e4d;
+
+    --ocean-deep: #071017;
+    --ocean-dark: #0f1c26;
+    --ocean-mid: #1c3847;
+    --ocean-surface: #248a9e;
+    --ocean-foam: #cde0e4;
+
+    --naval-gold: #e6b31a;
+    --miss-splash: #3a8fac;
+    --ship-hull: #3d4a57;
+
+    --destructive: #df2020;
+}
+
+@font-face{
+    font-family: 'Archivo';
+    src: url('fonts/ArchivoBlack-Regular.ttf');
+    font-style: normal;
+}
+
+@font-face{
+    font-family: 'Raleway';
+    src: url('fonts/Raleway-VariableFont_wght.ttf');
+    font-style: normal;
+}
+
+html{
+    background-color: var(--background);
+    
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/*Main Game*/
+
+.main-game{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-image: 
+        repeating-linear-gradient(var(--border) 0 1px , transparent 1px 100%),
+        repeating-linear-gradient(90deg , var(--border) 0 1px , transparent 1px 100%);
+    background-size: 45px 45px;
+    padding-top: 50px;
+}
+
+.main-game h2{
+    font-family: 'Archivo';
+    font-size: 4em;
+    color: var(--foreground)
+}
+
+.main-game h4{
+    font-family: 'Raleway';
+    font-size: 1.4em;
+    font-weight: normal;
+    color: var(--muted-foreground);
+}
+/*Game grid*/
+
+.grid-container{
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+}
+.game-grid{
+    background-color: gray;
+    display: grid;
+    grid-template-columns: repeat(11 , 1fr);
+    gap: 5px;
+    padding: 20px;
+}
+
+.game-grid div{
+    background-color: pink;
+    width: 50px;
+    height: 50px;
+}
+
+.game-grid div:hover{
+    cursor: crosshair;
+}
+
+.game-grid .game-header{
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-grid .game-header:hover{
+    cursor: auto;
+}
+
