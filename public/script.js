@@ -1,5 +1,5 @@
 ( function() {
-    openMainGame()
+    openShipPlacement()
     renderingBoardCells()
 })()
 
@@ -43,5 +43,5 @@ function openShipPlacement(){
     const mainGameScreen = document.querySelector('.main-game')
     const shipPlacementScreen = document.querySelector('.ship-placement')
     mainGameScreen.style.display = 'none'
-    shipPlacementScreen.style.display = 'none'
+    shipPlacementScreen.style.display = 'flex'
 }

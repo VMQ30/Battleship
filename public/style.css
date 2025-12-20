@@ -54,7 +54,8 @@ html{
     align-items: center;
 }
 
-.main-game{
+.main-game,
+.ship-placement{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -68,14 +69,16 @@ html{
     
 }
 
-.main-game h2{
+.main-game h2,
+.ship-placement h2{
     font-family: 'Archivo';
     font-size: 4em;
     color: var(--foreground);
     margin: 0px 20px;
 }
 
-.main-game h4{
+.main-game h4,
+.ship-placement h4{
     font-family: 'Raleway';
     font-size: 1.4em;
     font-weight: normal;
@@ -293,4 +296,105 @@ html{
         font-weight: 600;
         color: var(--foreground);
     }
+}
+
+/*Placing Ships Screen*/
+.place-ship-wrapper{
+    display: flex;
+    gap: 30px;
+}
+
+.ship-sidebar{
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background-color: var(--ocean-dark);
+    border-radius: 10px;
+    padding: 20px;
+    border: 2px solid var(--border);
+    h2{
+        color: var(--primary-teal);
+        font-size: 1.5em;
+        font-family: 'Archivo';
+        margin: 0;
+    }
+}
+
+.ship-title{
+    display: flex;
+    gap: 10px;
+}
+
+.ships{
+    padding: 10px 15px;
+    background-color: var(--secondary);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+
+    h3{
+        font-size: 1em;
+        font-family: 'Raleway';
+        font-weight: 600;
+        color: var(--foreground);
+        margin-bottom: 10px;
+    }
+}
+
+.ships:hover{
+    background-color: var(--ocean-mid);
+    border: 1px solid var(--ocean-surface);
+}
+.ship-health{
+    display: flex;
+    gap: 5px;
+}
+
+.health-cell{
+    width: 20px;
+    height: 20px;
+    background-color: var(--ship-hull);
+    border: 1px solid var(--naval-gold);
+    border-radius: 5px;
+}
+
+.ship-orientation,
+.auto-deploy,
+.begin-game{
+    cursor: pointer;
+    font-size: 1em;
+    padding: 5px;
+    font-family: 'Raleway';
+    font-weight: 600;
+    border-radius: 7px;
+    margin-bottom: 10px;
+    color: var(--foreground);
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out , border 0.3s ease-in-out;
+}
+
+.ship-orientation{
+    margin-top: 20px;
+    border: 1.5px solid var(--muted);
+    background-color: var(--ocean-deep);
+}
+.auto-deploy{
+    background-color: var(--ocean-mid);
+    border: 1.5px solid var(--ship-hull);
+}
+.begin-game{
+    background-color: var(--ocean-surface);
+    border: 1.5px solid var(--primary-teal)
+}
+
+.ship-orientation:hover,
+.auto-deploy:hover,
+.begin-game:hover{
+    color: var(--ocean-deep);
+    border: 1.5px solid var(--destructive);
+    background-color: var(--accent);
 }
