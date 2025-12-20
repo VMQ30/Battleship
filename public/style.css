@@ -266,7 +266,7 @@ html{
 .player-one-ships-detail,
 .player-two-ships-detail{
     margin-top: 40px;
-    background-color: var(--ocean-deep);
+    background-color: var(--ocean-dark);
     border-radius: 10px;
     padding: 20px;
     border: 2px solid var(--border);
@@ -274,5 +274,23 @@ html{
         color: var(--primary-teal);
         font-size: 1.5em;
         font-family: 'Archivo';
+        margin-bottom: 20px;
+    }
+}
+
+.ship-list div{
+    padding: 10px;
+    background-color: var(--secondary);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 10px;
+    border-radius: 10px;
+
+    p{
+        font-size: 1em;
+        font-family: 'Raleway';
+        font-weight: 600;
+        color: var(--foreground);
     }
 }
