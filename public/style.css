@@ -355,6 +355,13 @@ html{
     background-color: var(--ocean-mid);
     border: 1px solid var(--ocean-surface);
 }
+
+.selected-ship{
+    background-color: var(--ocean-mid);
+    border: 1px solid var(--ocean-surface);
+    box-shadow: 0 0 10px var(--ocean-surface);
+}
+
 .ship-health{
     display: flex;
     gap: 5px;

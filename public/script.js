@@ -6,38 +6,43 @@
 })()
 
 function renderingBoardCells(){
+    const gridSize = 11
     const grids = document.querySelectorAll('.game-grid')
     grids.forEach( ( grid ) => {
-        for( let i = 0 ; i < 11 ; i++ ){
-            for( let j = 0 ; j < 11 ; j++ ){
-                const cell = document.createElement('div')
-
-                if ( i === 0 && j !== 0 ){
-                    const letterHeader = document.createElement('p')
-                    letterHeader.textContent = String.fromCharCode( 65 + (j - 1) )
-                    cell.appendChild(letterHeader)
-                    cell.classList.add('game-header')
-                }
-
-                if ( i !== 0 && j === 0 ){
-                    const letterHeader = document.createElement('p')
-                    letterHeader.textContent = i
-                    cell.appendChild(letterHeader)
-                    cell.classList.add('game-header')
-                }
-
-                if ( i !== 0 && j !== 0 ) {
-                    cell.dataset.row = i - 1
-                    cell.dataset.col = j - 1
-                    cell.classList.add('cell')
-                } 
-
-                if ( i === 0 && j === 0 ) cell.classList.add('game-header')
-                
-                grid.appendChild(cell)
+        for( let i = 0 ; i < gridSize ; i++ ){
+            for( let j = 0 ; j < gridSize ; j++ ){
+                createCell( i , j , grid )
             }
         }
     })
+}
+
+function createCell( i , j , grid ){
+    const cell = document.createElement('div')
+
+    if ( i === 0 && j !== 0 ){
+        const letterHeader = document.createElement('p')
+        letterHeader.textContent = String.fromCharCode( 65 + (j - 1) )
+        cell.appendChild(letterHeader)
+        cell.classList.add('game-header')
+    }
+
+    if ( i !== 0 && j === 0 ){
+        const letterHeader = document.createElement('p')
+        letterHeader.textContent = i
+        cell.appendChild(letterHeader)
+        cell.classList.add('game-header')
+    }
+
+    if ( i !== 0 && j !== 0 ) {
+        cell.dataset.row = i - 1
+        cell.dataset.col = j - 1
+        cell.classList.add('cell')
+    } 
+
+    if ( i === 0 && j === 0 ) cell.classList.add('game-header')
+    
+    grid.appendChild(cell)
 }
 
 function openMainGame(){
@@ -69,52 +74,62 @@ function toggleOrientationButton(){
     })
 }
 
-function placeShip(){
+function highlightSelectedShip( ships , ship ){
+    ships.forEach( ( ship ) => {
+        ship.classList.remove('selected-ship')
+    })
+    ship.classList.add('selected-ship')
+}
+
+function getShipSize( ship ){
+    return Number(ship.getAttribute('data-ship'))
+}
+
+function placeShip( ){
+    const ships = document.querySelectorAll('.ships')
     const currentGrid = document.querySelector('.place-ships')
     const cells = currentGrid.querySelectorAll('.cell')
-    const toggleButton = document.querySelector('.ship-orientation')
+    let shipSize = 0
+    
+    ships.forEach( ( ship ) => {
+        ship.addEventListener('click' , () => {
+            highlightSelectedShip( ships , ship )
+            shipSize = getShipSize( ship )
+        })
+    })
+
     cells.forEach( ( cell ) => {
         cell.addEventListener( 'mouseenter' , () => {
-            const colCords = Number(cell.getAttribute('data-col'))
-            const rowCords = Number(cell.getAttribute('data-row'))
-            const orientation = (toggleButton.getAttribute('data-orientation'))
-
-            if(orientation === 'vertical'){
-                let selectedCells = []
-                
-                for(let i = 0 ; i < 5 ; i++ ){
-                    const newCells = getCell( rowCords + i , colCords , currentGrid )
-                    selectedCells.push( newCells )
-                }
-
-                selectedCells.forEach( ( selectedCell ) => {
-                    selectedCell.classList.add('selected')
-                })
-            }
-
-            else{
-                let selectedCells = []
-                
-                for(let i = 0 ; i < 5 ; i++ ){
-                    const newCells = getCell( rowCords , colCords + i , currentGrid )
-                    selectedCells.push( newCells )
-                }
-
-                console.log(selectedCells)
-
-                selectedCells.forEach( ( selectedCell ) => {
-                    selectedCell.classList.add('selected')
-                })
-            }
-
+            highlightCell( cell , currentGrid , shipSize )
         })
 
         cell.addEventListener( 'mouseleave' , () => {
-            cells.forEach((selectedCell) => {
-                selectedCell.classList.remove('selected')
-            })
-            
+            removeHighlight( cells )
         })
+    })
+}
+
+function highlightCell( cell , currentGrid , shipSize ){
+    const colCords = Number(cell.getAttribute('data-col'))
+    const rowCords = Number(cell.getAttribute('data-row'))
+    const toggleButton = document.querySelector('.ship-orientation')
+    const orientation = (toggleButton.getAttribute('data-orientation'))
+
+    let selectedCells = []
+    
+    for(let i = 0 ; i < shipSize ; i++ ){
+        const newCells = orientation === 'vertical' ? getCell( rowCords + i , colCords , currentGrid ) : getCell( rowCords , colCords + i , currentGrid )
+        selectedCells.push( newCells )
+    }
+
+    selectedCells.forEach( ( selectedCell ) => {
+        selectedCell.classList.add('selected')
+    })
+}
+
+function removeHighlight( cells ){
+    cells.forEach((selectedCell) => {
+        selectedCell.classList.remove('selected')
     })
 }
 
