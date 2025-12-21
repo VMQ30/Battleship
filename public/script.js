@@ -141,10 +141,20 @@ function placeShip( shipSize , cell , player , shipName ){
     const orientation = (toggleButton.getAttribute('data-orientation'))
 
     const newShip = new Ship( shipSize , shipName )
-
     player.gameboard.placeShip( newShip , rowCords , colCords , orientation)
 
     console.log(player)
+
+    markShipCells( rowCords , colCords , orientation , shipSize )
+}
+
+function markShipCells( rowCords , colCords , orientation , shipSize ){
+    const currentGrid = document.querySelector('.place-ships')
+
+    for(let i = 0 ; i < shipSize ; i++ ){
+        const newCells = orientation === 'vertical' ? getCell( rowCords + i , colCords , currentGrid ) : getCell( rowCords , colCords + i , currentGrid )
+        newCells.classList.add('has-ship')
+    }
 }
 
 function highlightCell( cell , currentGrid , shipSize ){

@@ -198,6 +198,33 @@ html{
     cursor: crosshair;
 }
 
+.game-grid .has-ship:not(.game-header){
+    background-image: linear-gradient(150deg , var(--ship-hull) 20% , var(--muted) 100%);
+    pointer-events: none;
+}
+
+.game-grid .has-ship:not(.game-header)::before{
+    background-image: linear-gradient(
+        45deg,
+        transparent 40%,
+        #3d4a57 50%,
+        transparent 60%
+    );
+}
+
+.has-ship::after{
+    content: '';
+    background-image: url('./fonts/ship.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
 .game-grid .selected{
     background-image: linear-gradient(150deg , var(--ocean-surface) 20% , var(--ocean-mid) 100%);
 }
