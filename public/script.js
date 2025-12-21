@@ -1,8 +1,11 @@
+import { Ship , Gameboard , Player} from './class.js'
+
 ( function() {
+    const playerOne = createPlayer()
     openShipPlacement()
     renderingBoardCells()
     toggleOrientationButton()
-    placeShip()
+    hoverShip( playerOne )
 })()
 
 function renderingBoardCells(){
@@ -75,26 +78,38 @@ function toggleOrientationButton(){
 }
 
 function highlightSelectedShip( ships , ship ){
-    ships.forEach( ( ship ) => {
-        ship.classList.remove('selected-ship')
-    })
+    removeSelectedShip( ships )
     ship.classList.add('selected-ship')
 }
 
-function getShipSize( ship ){
-    return Number(ship.getAttribute('data-ship'))
+function removeSelectedShip( ships ){
+    ships.forEach( ( ship ) => {
+        ship.classList.remove('selected-ship')
+    })
 }
 
-function placeShip( ){
+function disableShip( ship ){
+    ship.classList.add('disable-ship')
+    ship.style.pointerEvents = 'none'
+}
+
+function getShipDetails( ship ){
+    const shipSize =  Number(ship.getAttribute('data-ship'))
+    const shipName = ship.getAttribute('data-name')
+    return { shipSize , shipName }
+}
+
+function hoverShip( playerOne ){
     const ships = document.querySelectorAll('.ships')
     const currentGrid = document.querySelector('.place-ships')
     const cells = currentGrid.querySelectorAll('.cell')
     let shipSize = 0
+    let shipName = ''
     
     ships.forEach( ( ship ) => {
         ship.addEventListener('click' , () => {
-            highlightSelectedShip( ships , ship )
-            shipSize = getShipSize( ship )
+            highlightSelectedShip( ships , ship );
+            ({ shipSize, shipName } = getShipDetails(ship))
         })
     })
 
@@ -106,7 +121,30 @@ function placeShip( ){
         cell.addEventListener( 'mouseleave' , () => {
             removeHighlight( cells )
         })
+
+        cell.addEventListener( 'click' , () => {
+            if(shipSize === 0) { alert('Pick a Ship') }
+            else{ 
+                placeShip( shipSize , cell , playerOne , shipName) 
+                const shipButton = document.querySelector(`[data-name='${shipName}']`)
+                disableShip(shipButton)
+                shipSize = 0
+            }
+        })
     })
+}
+
+function placeShip( shipSize , cell , player , shipName ){
+    const colCords = Number(cell.getAttribute('data-col'))
+    const rowCords = Number(cell.getAttribute('data-row'))
+    const toggleButton = document.querySelector('.ship-orientation')
+    const orientation = (toggleButton.getAttribute('data-orientation'))
+
+    const newShip = new Ship( shipSize , shipName )
+
+    player.gameboard.placeShip( newShip , rowCords , colCords , orientation)
+
+    console.log(player)
 }
 
 function highlightCell( cell , currentGrid , shipSize ){
@@ -135,4 +173,9 @@ function removeHighlight( cells ){
 
 function getCell( row , col , grid){
     return  grid.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`)
+}
+
+function createPlayer( name ){
+    const playerOne = new Player( name )
+    return playerOne
 }

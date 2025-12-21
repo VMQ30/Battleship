@@ -1,4 +1,4 @@
-const { Ship , Gameboard } = require('./classes.js')
+const { Ship , Gameboard , Player } = require('./classes.cjs.js')
 
 test('ship is not sunk' , () => {
     const ship = new Ship(4)
@@ -27,4 +27,11 @@ test('gameboard has no ships on the board' , () => {
     gameboard.receiveAttack( 2 , 0)
     gameboard.receiveAttack( 3 , 0)
     expect(gameboard.noShips()).toBeTruthy()
+})
+
+test('player puts a ship on the gameboard' , () => {
+    const player = new Player( 'A' )
+    const ship = new Ship(4)
+    expect(player.gameboard.placeShip( ship , 0 , 0 , 'vertical' )).toBeTruthy
+
 })

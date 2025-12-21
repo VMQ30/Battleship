@@ -362,6 +362,13 @@ html{
     box-shadow: 0 0 10px var(--ocean-surface);
 }
 
+.disable-ship{
+    background-color: var(--ship-hull);
+    border: 1px solid var(--ocean-mid);
+    color: var(--foreground);
+    box-shadow: inset 0 0 10px var(--border);
+}
+
 .ship-health{
     display: flex;
     gap: 5px;
