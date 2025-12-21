@@ -146,6 +146,7 @@ function placeShip( shipSize , cell , player , shipName ){
     console.log(player)
 
     markShipCells( rowCords , colCords , orientation , shipSize )
+    checkIfAllShipsArePlaced( player )
 }
 
 function markShipCells( rowCords , colCords , orientation , shipSize ){
@@ -188,4 +189,11 @@ function getCell( row , col , grid){
 function createPlayer( name ){
     const playerOne = new Player( name )
     return playerOne
+}
+
+function checkIfAllShipsArePlaced( player ){
+    if ((player.gameboard.ships).length === 5){
+        const beginButton = document.querySelector('.begin-game')
+        beginButton.disabled = false
+    }
 }

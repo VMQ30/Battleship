@@ -428,13 +428,21 @@ html{
     border: 1.5px solid var(--muted);
     background-color: var(--ocean-deep);
 }
+
 .auto-deploy{
     background-color: var(--ocean-mid);
     border: 1.5px solid var(--ship-hull);
 }
+
 .begin-game{
     background-color: var(--ocean-surface);
-    border: 1.5px solid var(--primary-teal)
+    border: 1.5px solid var(--primary-teal);
+}
+
+.begin-game:disabled, 
+.begin-game[disabled]{
+    opacity: 0.5;
+    pointer-events: none;
 }
 
 .ship-orientation:hover,
