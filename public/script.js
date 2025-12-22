@@ -66,6 +66,8 @@ function openShipPlacement(){
 function enableAutoDeploy( player ){
     const autoDeployButton = document.querySelector('.auto-deploy')
     autoDeployButton.addEventListener('click' , () => {
+        clearBoard( player )
+        clearMarkedShippCells()
         autoDeploy( player )
     })
 }
@@ -178,10 +180,7 @@ function autoDeploy( player ){
             const randomCol = randomNum( 10 )
             const randomRow = randomNum( 10 )
             const randomOrientation = orientation[(randomNum( 2 )) % 2]
-
-            console.log(shipSize , randomRow , randomCol , randomOrientation , player , shipName)
             isShipPlaced = placeShip( shipSize , randomRow , randomCol , randomOrientation , player , shipName)
-
         }
     }
 }
@@ -197,6 +196,16 @@ function markShipCells( rowCords , colCords , orientation , shipSize ){
         const newCells = orientation === 'vertical' ? getCell( rowCords + i , colCords , currentGrid ) : getCell( rowCords , colCords + i , currentGrid )
         newCells.classList.add('has-ship')
     }
+}
+
+function clearMarkedShippCells(){
+    const currentGrid = document.querySelector('.place-ships')
+    const cells = currentGrid.querySelectorAll('.has-ship')
+
+    cells.forEach((cell) => {
+        cell.classList.remove('has-ship')
+    })
+
 }
 
 function highlightCell( cell , currentGrid , shipSize ){
@@ -243,4 +252,8 @@ function beginGame(){
     beginGame.addEventListener('click' , () => {
         openMainGame()
     })
+}
+
+function clearBoard( player ){
+    player.gameboard.clearPlayerBoard()
 }

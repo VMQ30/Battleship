@@ -65,6 +65,11 @@ class Gameboard{
         const index = this.ships.indexOf(cell)
         this.ships.splice(index , 1)
     }
+
+    clearPlayerBoard(){
+        this.board = Array.from( { length : 10 } , () => Array(10).fill(null) )
+        this.ships = []
+    }
 }
 
 class Player{
