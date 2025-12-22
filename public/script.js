@@ -6,6 +6,7 @@ import { Ship , Gameboard , Player} from './class.js'
     renderingBoardCells()
     toggleOrientationButton()
     hoverShip( playerOne )
+    enableAutoDeploy( playerOne )
 })()
 
 function renderingBoardCells(){
@@ -23,27 +24,27 @@ function renderingBoardCells(){
 function createCell( i , j , grid ){
     const cell = document.createElement('div')
 
-    if ( i === 0 && j !== 0 ){
+    if ( i === 0 && j === 0 ) cell.classList.add('game-header')
+
+    else if ( i === 0 ){
         const letterHeader = document.createElement('p')
         letterHeader.textContent = String.fromCharCode( 65 + (j - 1) )
         cell.appendChild(letterHeader)
         cell.classList.add('game-header')
     }
 
-    if ( i !== 0 && j === 0 ){
+    else if ( j === 0 ){
         const letterHeader = document.createElement('p')
         letterHeader.textContent = i
         cell.appendChild(letterHeader)
         cell.classList.add('game-header')
     }
 
-    if ( i !== 0 && j !== 0 ) {
+    else {
         cell.dataset.row = i - 1
         cell.dataset.col = j - 1
         cell.classList.add('cell')
     } 
-
-    if ( i === 0 && j === 0 ) cell.classList.add('game-header')
     
     grid.appendChild(cell)
 }
@@ -60,6 +61,13 @@ function openShipPlacement(){
     const shipPlacementScreen = document.querySelector('.ship-placement')
     mainGameScreen.style.display = 'none'
     shipPlacementScreen.style.display = 'flex'
+}
+
+function enableAutoDeploy( player ){
+    const autoDeployButton = document.querySelector('.auto-deploy')
+    autoDeployButton.addEventListener('click' , () => {
+        autoDeploy( player )
+    })
 }
 
 function toggleOrientationButton(){
@@ -99,7 +107,7 @@ function getShipDetails( ship ){
     return { shipSize , shipName }
 }
 
-function hoverShip( playerOne ){
+function hoverShip( player ){
     const ships = document.querySelectorAll('.ships')
     const currentGrid = document.querySelector('.place-ships')
     const cells = currentGrid.querySelectorAll('.cell')
@@ -123,31 +131,64 @@ function hoverShip( playerOne ){
         })
 
         cell.addEventListener( 'click' , () => {
-            if(shipSize === 0) { alert('Pick a Ship') }
-            else{ 
-                placeShip( shipSize , cell , playerOne , shipName) 
-                const shipButton = document.querySelector(`[data-name='${shipName}']`)
-                disableShip(shipButton)
+            if(shipSize === 0) return alert('Pick a Ship')
+            
+            const colCords = Number(cell.getAttribute('data-col'))
+            const rowCords = Number(cell.getAttribute('data-row'))
+            const orientation = document.querySelector('.ship-orientation').getAttribute('data-orientation')
+
+            const isShipPlaced = placeShip( shipSize , rowCords , colCords , orientation , player , shipName) 
+            
+            if(isShipPlaced){
                 shipSize = 0
+                shipName = ''
             }
+            
         })
     })
 }
 
-function placeShip( shipSize , cell , player , shipName ){
-    const colCords = Number(cell.getAttribute('data-col'))
-    const rowCords = Number(cell.getAttribute('data-row'))
-    const toggleButton = document.querySelector('.ship-orientation')
-    const orientation = (toggleButton.getAttribute('data-orientation'))
+function placeShip( shipSize , rowCords , colCords , orientation , player , shipName ){
+    
 
     const newShip = new Ship( shipSize , shipName )
-    player.gameboard.placeShip( newShip , rowCords , colCords , orientation)
+    const isShipPlaced = player.gameboard.placeShip( newShip , rowCords , colCords , orientation)
+
+    if(isShipPlaced){
+        markShipCells( rowCords , colCords , orientation , shipSize )
+        checkIfAllShipsArePlaced( player )
+        const shipButton = document.querySelector(`[data-name='${shipName}']`)
+        disableShip(shipButton)
+        return true
+    }
 
     console.log(player)
+    return false
+}  
 
-    markShipCells( rowCords , colCords , orientation , shipSize )
-    checkIfAllShipsArePlaced( player )
+function autoDeploy( player ){
+    const shipInfo = {'Carrier' : 5 , 'Battleship' : 4 , 'Cruiser' : 3 , 'Submarine' : 3 , 'Destroyer' : 2 }
+    const orientation = [ 'vertical' , 'horizontal' ]
+
+    for( const shipName in shipInfo ){
+        const shipSize = shipInfo[shipName]
+        let isShipPlaced = false
+
+        while(!isShipPlaced){
+            const randomCol = randomNum( 10 )
+            const randomRow = randomNum( 10 )
+            const randomOrientation = orientation[(randomNum( 2 )) % 2]
+
+            console.log(shipSize , randomRow , randomCol , randomOrientation , player , shipName)
+            isShipPlaced = placeShip( shipSize , randomRow , randomCol , randomOrientation , player , shipName)
+
+        }
+    }
 }
+
+function randomNum( max ){
+    return Math.floor(Math.random() * max )
+} 
 
 function markShipCells( rowCords , colCords , orientation , shipSize ){
     const currentGrid = document.querySelector('.place-ships')
@@ -161,8 +202,7 @@ function markShipCells( rowCords , colCords , orientation , shipSize ){
 function highlightCell( cell , currentGrid , shipSize ){
     const colCords = Number(cell.getAttribute('data-col'))
     const rowCords = Number(cell.getAttribute('data-row'))
-    const toggleButton = document.querySelector('.ship-orientation')
-    const orientation = (toggleButton.getAttribute('data-orientation'))
+    const orientation = document.querySelector('.ship-orientation').getAttribute('data-orientation')
 
     let selectedCells = []
     
@@ -193,7 +233,14 @@ function createPlayer( name ){
 
 function checkIfAllShipsArePlaced( player ){
     if ((player.gameboard.ships).length === 5){
-        const beginButton = document.querySelector('.begin-game')
-        beginButton.disabled = false
+        document.querySelector('.begin-game').disabled = false
+        beginGame()
     }
+}
+
+function beginGame(){
+    const beginGame = document.querySelector('.begin-game')
+    beginGame.addEventListener('click' , () => {
+        openMainGame()
+    })
 }
