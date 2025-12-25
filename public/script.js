@@ -101,23 +101,31 @@ function toggleOrientationButton(){
     })
 }
 
-function beginGame(){
+function beginGame( player ){
     const beginGame = document.querySelector('.begin-game')
+    const playerOneMainGrid = document.querySelector('.player-one .game-grid')
     const grid = getPlacementGrid()
+
     beginGame.addEventListener('click' , () => {
+        console.log(player.gameboard.ships)
 
         openMainGame()
 
-        const playerOneMainGrid = document.querySelector('.player-one .game-grid')
-        styleAllShipsOnGrid(player, playerOneMainGrid)
-        
         const enemy = createPlayer('Enemy')
         autoDeploy( enemy , false , grid )
+
+        
+        styleAllShipsOnGrid(player, playerOneMainGrid)
+        
+
     })
 }
 
-function styleAllShipsOnGrid(){
-    
+function styleAllShipsOnGrid( player , grid ){
+    player.gameboard.ships.forEach( ( ship ) => {
+        const { length , coordinates , orientation } = ship
+        markShipCells( coordinates[0] , coordinates[1] , orientation , length , grid )
+    })
 }
 
 //Ship Placements
@@ -187,7 +195,7 @@ function styleShipPlaced( rowCords , colCords , orientation , shipSize , shipNam
 }
 
 function placeShip( shipSize , rowCords , colCords , orientation , player , shipName ){
-    const newShip = new Ship( shipSize , shipName )
+    const newShip = new Ship( shipSize , shipName , orientation)
     return player.gameboard.placeShip( newShip , rowCords , colCords , orientation)
 }  
 
@@ -315,7 +323,7 @@ function randomNum( max ){
 function checkIfAllShipsArePlaced( player ){
     if ((player.gameboard.ships).length === 5){
         document.querySelector('.begin-game').disabled = false
-        beginGame()
+        beginGame( player )
     }
 }
 

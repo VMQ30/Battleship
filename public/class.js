@@ -1,10 +1,11 @@
 class Ship{
-    constructor( length , name ){
+    constructor( length , name , orientation){
         this.sunk = false,
         this.numOfTimesHit = 0
         this.length = length
         this.name = name
         this.coordinates = []
+        this.orientation = orientation
     }
 
     hit() { 
@@ -13,7 +14,7 @@ class Ship{
     }
 
     placeCoords( row , col ){
-        this.coordinates.push( [ row , col ] )
+        this.coordinates = [ row , col ]
     }
 
     isSunk() { return this.numOfTimesHit >= this.length ? this.sunk = true : this.sunk = false }
@@ -47,6 +48,7 @@ class Gameboard{
         }
 
         ship.placeCoords( startRow , startCol )
+
         this.ships.push(ship)
         return true
     }
