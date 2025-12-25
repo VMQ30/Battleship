@@ -104,20 +104,11 @@ function toggleOrientationButton(){
 function beginGame( player ){
     const beginGame = document.querySelector('.begin-game')
     const playerOneMainGrid = document.querySelector('.player-one .game-grid')
-    const grid = getPlacementGrid()
 
     beginGame.addEventListener('click' , () => {
-        console.log(player.gameboard.ships)
-
         openMainGame()
-
-        const enemy = createPlayer('Enemy')
-        autoDeploy( enemy , false , grid )
-
-        
+        setUpEnemyGrid()
         styleAllShipsOnGrid(player, playerOneMainGrid)
-        
-
     })
 }
 
@@ -357,4 +348,41 @@ function createPlayer( name ){
 
 
 
+
+//begin game
+
+function getEnemyGrid(){
+    return document.querySelector('.player-two-grid')
+}
+
+function setUpEnemyGrid(){
+    const grid = getEnemyGrid()
+    const enemy = createPlayer('Enemy')
+    autoDeploy( enemy , false , grid )
+    
+
+
+
+    //Remember to remove later
+    console.log(enemy)
+    styleAllShipsOnGrid(enemy, grid)
+    enemyGrid( enemy )
+}
+
+function enemyGrid( enemy ){
+    const enemyGrid = getEnemyGrid()
+    const cells = enemyGrid.querySelectorAll('.cell')
+
+    cells.forEach((cell) => {
+        cell.addEventListener('click' , () => {
+            const col = Number(cell.getAttribute('data-col'))
+            const row = Number(cell.getAttribute('data-row'))
+
+            const isHit = enemy.gameboard.receiveAttack( row , col )
+
+            if( isHit ) console.log(enemy)
+            else console.log('Miss')
+        })
+    })
+}
 

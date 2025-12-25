@@ -296,6 +296,14 @@ html{
     filter: blur(10px);
 }
 
+.player-one .grid-wrapper .player-one-grid{
+    pointer-events: none;
+}
+
+.player-two-grid .game-grid .has-ship:not(.game-header){
+    pointer-events: all;
+}
+
 /* Ship Details */
 
 .player-one-ships-detail,
@@ -452,3 +460,4 @@ html{
     border: 1.5px solid var(--destructive);
     background-color: var(--accent);
 }
+
