@@ -2,8 +2,8 @@ import { Ship , Player} from './class.js'
 
 ( function() {
     const player = createPlayer( 'Player One' )
-    const enemy = createPlayer('Enemy')
     setUpGame( player )
+
 })()
 
 //Setup
@@ -103,9 +103,21 @@ function toggleOrientationButton(){
 
 function beginGame(){
     const beginGame = document.querySelector('.begin-game')
+    const grid = getPlacementGrid()
     beginGame.addEventListener('click' , () => {
+
         openMainGame()
+
+        const playerOneMainGrid = document.querySelector('.player-one .game-grid')
+        styleAllShipsOnGrid(player, playerOneMainGrid)
+        
+        const enemy = createPlayer('Enemy')
+        autoDeploy( enemy , false , grid )
     })
+}
+
+function styleAllShipsOnGrid(){
+    
 }
 
 //Ship Placements
@@ -114,19 +126,19 @@ function hoverShip( player ){
     const ships = document.querySelectorAll('.ships')
     const currentGrid = document.querySelector('.place-ships')
     const cells = currentGrid.querySelectorAll('.cell')
-    let shipSize = 0
-    let shipName = ''
+
+    let selectedShip = { size: 0, name: '' }
     
     ships.forEach( ( ship ) => {
         ship.addEventListener('click' , () => {
             highlightSelectedShip( ship );
-            ({ shipSize, shipName } = getShipDetails(ship))
+            selectedShip = getShipDetails(ship)
         })
     })
 
     cells.forEach( ( cell ) => {
         cell.addEventListener( 'mouseenter' , () => {
-            highlightCell( cell , currentGrid , shipSize )
+            highlightCell( cell , currentGrid , selectedShip.size )
         })
 
         cell.addEventListener( 'mouseleave' , () => {
@@ -134,52 +146,66 @@ function hoverShip( player ){
         })
 
         cell.addEventListener( 'click' , () => {
-            if(shipSize === 0) return alert('Pick a Ship')
-            
-            const colCords = Number(cell.getAttribute('data-col'))
-            const rowCords = Number(cell.getAttribute('data-row'))
-            const orientation = document.querySelector('.ship-orientation').getAttribute('data-orientation')
-
-            const isShipPlaced = placeShip( shipSize , rowCords , colCords , orientation , player , shipName) 
-            
+            const isShipPlaced = cellClicked( selectedShip.size , player , selectedShip.name , cell )
             if(isShipPlaced){
-                shipSize = 0
-                shipName = ''
+                selectedShip = { size : 0 , name : '' }
             }
-            
         })
     })
 }
 
+function getOrientation(){
+    return document.querySelector('.ship-orientation').getAttribute('data-orientation')
+}
+
+function getPlacementGrid(){
+    return document.querySelector('.place-ships')
+}
+
+function cellClicked( shipSize , player , shipName , cell ){
+    if(shipSize === 0) return alert('Pick a Ship')
+            
+    const colCords = Number(cell.getAttribute('data-col'))
+    const rowCords = Number(cell.getAttribute('data-row'))
+    const orientation = getOrientation()
+    const grid = getPlacementGrid()
+
+    const isPlaced = placeShip( shipSize , rowCords , colCords , orientation , player , shipName) 
+    
+    if(isPlaced){
+        styleShipPlaced( rowCords , colCords , orientation , shipSize , shipName , player , grid )
+    }
+    
+    return isPlaced
+}
+
+function styleShipPlaced( rowCords , colCords , orientation , shipSize , shipName , player , grid){
+    markShipCells( rowCords , colCords , orientation , shipSize , grid )
+    checkIfAllShipsArePlaced( player )
+    const shipButton = document.querySelector(`[data-name='${shipName}']`)
+    disableShip(shipButton)
+}
+
 function placeShip( shipSize , rowCords , colCords , orientation , player , shipName ){
     const newShip = new Ship( shipSize , shipName )
-    const isShipPlaced = player.gameboard.placeShip( newShip , rowCords , colCords , orientation)
-
-    if(isShipPlaced){
-        markShipCells( rowCords , colCords , orientation , shipSize )
-        checkIfAllShipsArePlaced( player )
-        const shipButton = document.querySelector(`[data-name='${shipName}']`)
-        disableShip(shipButton)
-        return true
-    }
-
-    console.log(player)
-    return false
+    return player.gameboard.placeShip( newShip , rowCords , colCords , orientation)
 }  
 
 function enableAutoDeploy( player ){
     const autoDeployButton = document.querySelector('.auto-deploy')
+    const grid = getPlacementGrid()
     autoDeployButton.addEventListener('click' , () => {
         clearBoard( player )
         clearMarkedShippCells()
-        autoDeploy( player )
+        autoDeploy( player , true , grid )
     })
 }
 
 function getShipDetails( ship ){
-    const shipSize =  Number(ship.getAttribute('data-ship'))
-    const shipName = ship.getAttribute('data-name')
-    return { shipSize , shipName }
+    return { 
+        size : Number(ship.getAttribute('data-ship')), 
+        name : ship.getAttribute('data-name')
+    }
 }
 
 //Ship Highlighting / Styling
@@ -232,9 +258,7 @@ function removeHighlight( cells ){
     })
 }
 
-function markShipCells( rowCords , colCords , orientation , shipSize ){
-    const currentGrid = document.querySelector('.place-ships')
-
+function markShipCells( rowCords , colCords , orientation , shipSize , currentGrid ){
     for(let i = 0 ; i < shipSize ; i++ ){
         const newCells = orientation === 'vertical' ? getCell( rowCords + i , colCords , currentGrid ) : getCell( rowCords , colCords + i , currentGrid )
         newCells.classList.add('has-ship')
@@ -256,9 +280,13 @@ function getCell( row , col , grid){
 
 //Auto Deploy
 
-function autoDeploy( player ){
-    const shipInfo = {'Carrier' : 5 , 'Battleship' : 4 , 'Cruiser' : 3 , 'Submarine' : 3 , 'Destroyer' : 2 }
+function getRandomOrientation(){
     const orientation = [ 'vertical' , 'horizontal' ]
+    return orientation[(randomNum( 2 )) % 2]
+}
+
+function autoDeploy( player , style = true , grid ){
+    const shipInfo = {'Carrier' : 5 , 'Battleship' : 4 , 'Cruiser' : 3 , 'Submarine' : 3 , 'Destroyer' : 2 }
 
     for( const shipName in shipInfo ){
         const shipSize = shipInfo[shipName]
@@ -267,10 +295,15 @@ function autoDeploy( player ){
         while(!isShipPlaced){
             const randomCol = randomNum( 10 )
             const randomRow = randomNum( 10 )
-            const randomOrientation = orientation[(randomNum( 2 )) % 2]
+            const randomOrientation = getRandomOrientation()
+
             isShipPlaced = placeShip( shipSize , randomRow , randomCol , randomOrientation , player , shipName)
+            if( isShipPlaced && style ){
+                styleShipPlaced( randomRow , randomCol , randomOrientation , shipSize , shipName , player , grid)
+            }
         }
     }
+    console.log(player)
 }
 
 function randomNum( max ){
@@ -294,7 +327,6 @@ function resetGame( player ){
     const resetButtons = document.querySelectorAll('.reset')
     resetButtons.forEach((resetButton) => {
         resetButton.addEventListener('click' , () => {
-            console.log('hi')
             player.gameboard.clearPlayerBoard()
             clearMarkedShippCells()
             openShipPlacement()
