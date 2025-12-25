@@ -1,8 +1,9 @@
 import { Ship , Player} from './class.js'
 
 ( function() {
-    const playerOne = createPlayer( 'Player One' )
-    setUpGame( playerOne )
+    const player = createPlayer( 'Player One' )
+    const enemy = createPlayer('Enemy')
+    setUpGame( player )
 })()
 
 //Setup
