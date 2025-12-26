@@ -59,7 +59,7 @@ class Gameboard{
         if( cell !== null ){
             cell.hit()
             this.board[row][col] = 'hit'
-            if(cell.isSunk()){ this.removeShip() }
+            if(cell.isSunk()){ this.removeShip( cell ) }
             return true
         }
         else{
@@ -87,4 +87,46 @@ class Player{
     }
 }
 
-export { Ship , Gameboard , Player }
+class GameController{
+    constructor( player , enemy ){
+        this.player = player
+        this.enemy = enemy
+        this.currentTurn = 'player'
+        this.gameOver = false
+    }
+
+    isPlayerTurn(){
+        return this.currentTurn === 'player'
+    }
+
+    canPlayerAct() {
+        return !this.gameOver && this.isPlayerTurn()
+    }
+
+    endPlayerTurn() {
+        this.currentTurn = 'enemy'
+    }
+
+    endEnemyTurn() {
+        this.currentTurn = 'player'
+    }
+
+    checkIfGameOver(){
+        if(this.player.gameboard.noShips()){
+            this.gameOver = true
+            return this.player
+        }
+
+        if(this.enemy.gameboard.noShips()){
+            this.gameOver = true
+            return this.enemy
+        }
+    }
+
+    reset() {
+        this.currentTurn = 'player'
+        this.gameOver = false
+    }
+}
+
+export { Ship , Gameboard , Player , GameController }

@@ -1,4 +1,4 @@
-import { Ship , Player} from './class.js'
+import { Ship , Player , GameController } from './class.js'
 
 ( function() {
     const player = createPlayer( 'Player One' )
@@ -351,6 +351,47 @@ function createPlayer( name ){
 
 //begin game
 
+function enemyTurn( controller ){
+    const instructions = document.querySelector('.instructions-text')
+    enemyTurnStyling(instructions)
+
+    setTimeout(() => {
+        enemyAttack(controller.player , controller.enemy )
+        controller.endEnemyTurn()
+        playerTurnStyling(instructions)
+    }, 1000)
+}
+
+function enemyTurnStyling(instructions){
+    const enemyGrid = document.querySelector('.player-two-grid-wrapper')
+    const playerGrid = document.querySelector('.player-one-grid-wrapper')
+
+    playerGrid.classList.add('active')
+    enemyGrid.classList.remove('active')
+    instructions.textContent = "Enemy's turn..."
+}
+
+function playerTurnStyling(instructions){
+    const enemyGrid = document.querySelector('.player-two-grid-wrapper')
+    const playerGrid = document.querySelector('.player-one-grid-wrapper')
+
+    enemyGrid.classList.add('active')
+    playerGrid.classList.remove('active')
+    instructions.textContent = 'Your Turn - Select a Target'
+}
+
+
+function enemyAttack( player , enemy ){
+    const grid = document.querySelector('.player-one-grid')
+    
+    let row = randomNum(10)
+    let col = randomNum(10)
+    let cell = grid.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`)
+    checkIfShipIsHit( cell , player )
+    checkIfPlayerHasNoShip( enemy , player )
+
+}
+
 function getEnemyGrid(){
     return document.querySelector('.player-two-grid')
 }
@@ -358,25 +399,32 @@ function getEnemyGrid(){
 function setUpEnemyGrid( player ){
     const grid = getEnemyGrid()
     const enemy = createPlayer('Enemy')
+
     autoDeploy( enemy , false , grid )
     
+    const controller = new GameController( player , enemy )
 
 
 
     //Remember to remove later
     console.log(enemy)
     styleAllShipsOnGrid(enemy, grid)
-    enemyGrid( enemy , player )
+    enemyGrid( enemy , player , controller )
 }
 
-function enemyGrid( enemy , player ){
+function enemyGrid( enemy , player , controller ){
     const enemyGrid = getEnemyGrid()
     const cells = enemyGrid.querySelectorAll('.cell')
 
     cells.forEach((cell) => {
         cell.addEventListener('click' , () => {
+            if (!controller.canPlayerAct()) return
+
             checkIfShipIsHit( cell , enemy )
             checkIfPlayerHasNoShip( player , enemy )
+
+            controller.endPlayerTurn()
+            enemyTurn( controller )
         })
     })
 }
@@ -386,7 +434,6 @@ function checkIfPlayerHasNoShip( playerOne , playerTwo ){
     const instructions = document.querySelector('.instructions-text')
 
     if(hasNoShips) instructions.textContent = `${playerOne.name} has won!`
-
 }
 
 function checkIfShipIsHit( cell , player ){
@@ -396,6 +443,8 @@ function checkIfShipIsHit( cell , player ){
 
     if( isHit ) cellHit( cell )
     else cellMiss( cell )
+
+    console.log(player)
 }
 
 function cellHit( cell ){
@@ -406,8 +455,4 @@ function cellHit( cell ){
 function cellMiss( cell ){
     cell.classList.add('miss')
     cell.classList.remove('has-ship')
-}
-
-function enemyLose(){
-
 }
