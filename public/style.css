@@ -374,7 +374,8 @@ html{
     margin-top: 20px;
     border-radius: 10px;
     border: 1px solid var(--border);
-    transition: 0.3s ease-in-out;
+    transition: background-color 0.3s ease-in-out,
+                border 0.3s ease-in-out;
     cursor: pointer;
 
     h3{
@@ -461,3 +462,34 @@ html{
     background-color: var(--accent);
 }
 
+*:focus {
+  outline: 2px solid var(--naval-gold);
+}
+
+.game-grid .hit{
+    background-image: linear-gradient(150deg , var(--accent) 20% , var(--destructive) 100%);
+    pointer-events: none;
+}
+
+.game-grid .hit:not(.game-header)::before{
+    background-image: linear-gradient(
+        45deg,
+        transparent 40%,
+        #f5714d 50%,
+        transparent 60%
+    );
+}
+
+.game-grid .miss{
+    background-image: linear-gradient(150deg , var(--miss-splash) 20% , var(--ocean-mid) 100%);
+    pointer-events: none;
+}
+
+.game-grid .miss:not(.game-header)::before{
+    background-image: linear-gradient(
+        45deg,
+        transparent 40%,
+        #4495af 50%,
+        transparent 60%
+    );
+}

@@ -107,7 +107,7 @@ function beginGame( player ){
 
     beginGame.addEventListener('click' , () => {
         openMainGame()
-        setUpEnemyGrid()
+        setUpEnemyGrid( player )
         styleAllShipsOnGrid(player, playerOneMainGrid)
     })
 }
@@ -355,7 +355,7 @@ function getEnemyGrid(){
     return document.querySelector('.player-two-grid')
 }
 
-function setUpEnemyGrid(){
+function setUpEnemyGrid( player ){
     const grid = getEnemyGrid()
     const enemy = createPlayer('Enemy')
     autoDeploy( enemy , false , grid )
@@ -366,23 +366,48 @@ function setUpEnemyGrid(){
     //Remember to remove later
     console.log(enemy)
     styleAllShipsOnGrid(enemy, grid)
-    enemyGrid( enemy )
+    enemyGrid( enemy , player )
 }
 
-function enemyGrid( enemy ){
+function enemyGrid( enemy , player ){
     const enemyGrid = getEnemyGrid()
     const cells = enemyGrid.querySelectorAll('.cell')
 
     cells.forEach((cell) => {
         cell.addEventListener('click' , () => {
-            const col = Number(cell.getAttribute('data-col'))
-            const row = Number(cell.getAttribute('data-row'))
-
-            const isHit = enemy.gameboard.receiveAttack( row , col )
-
-            if( isHit ) console.log(enemy)
-            else console.log('Miss')
+            checkIfShipIsHit( cell , enemy )
+            checkIfPlayerHasNoShip( player , enemy )
         })
     })
 }
 
+function checkIfPlayerHasNoShip( playerOne , playerTwo ){
+    const hasNoShips = playerTwo.gameboard.noShips()
+    const instructions = document.querySelector('.instructions-text')
+
+    if(hasNoShips) instructions.textContent = `${playerOne.name} has won!`
+
+}
+
+function checkIfShipIsHit( cell , player ){
+    const col = Number(cell.getAttribute('data-col'))
+    const row = Number(cell.getAttribute('data-row'))
+    const isHit = player.gameboard.receiveAttack( row , col )
+
+    if( isHit ) cellHit( cell )
+    else cellMiss( cell )
+}
+
+function cellHit( cell ){
+    cell.classList.add('hit')
+    cell.classList.remove('has-ship')
+}
+
+function cellMiss( cell ){
+    cell.classList.add('miss')
+    cell.classList.remove('has-ship')
+}
+
+function enemyLose(){
+
+}
