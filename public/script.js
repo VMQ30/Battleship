@@ -1,14 +1,54 @@
 import { Ship , Player , GameController } from './class.js'
 
 ( function() {
-    const player = createPlayer( 'Player One' )
-    setUpGame( player )
-
+    setUpUI()
+    getPlayerName()
 })()
 
+function closeModal(){
+    const modal = document.querySelector('.modal-container')
+    console.log(modal)
+    modal.style.display = 'none'
+    document.body.classList.remove('no-scroll')   
+}
+
+function getPlayerName(){
+    document.body.classList.add('no-scroll')
+    const button = document.querySelector('.play-button')
+    
+    button.addEventListener('click' , () => {
+        const name = document.querySelector('.name').value
+
+        if (!name){
+            createErrorMessage('*Error: Name is Required')
+        }
+
+        else if( name.length < 2 ){
+            createErrorMessage('*Error: Name is too short')
+        }
+
+        else if( name.length > 12 ){
+            createErrorMessage('*Error: Name is too long')
+        }
+
+        else{
+            closeModal()
+            const player = createPlayer( 'Player One' )
+            setUpGame( player )
+        }
+    })
+}
+
+function createErrorMessage( message ){
+    const inputBox = document.querySelector('.error-message')
+    inputBox.innerHTML = ''
+    const error = document.createElement('p')
+    error.textContent = message
+    error.classList.add('error')
+    inputBox.appendChild(error)
+}
 //Setup
 function setUpGame( player ){
-    setUpUI()
     setUpShipPlacement( player )
     setUpGameControls( player )
 }
@@ -265,11 +305,19 @@ function markShipCells( rowCords , colCords , orientation , shipSize , currentGr
 }
 
 function clearMarkedShippCells(){
-    const currentGrid = document.querySelector('.place-ships')
-    const cells = currentGrid.querySelectorAll('.has-ship')
-
-    cells.forEach((cell) => {
+    const shipCells = document.querySelectorAll('.has-ship')
+    const missedCells = document.querySelectorAll('.miss')
+    const hitCells = document.querySelectorAll('.hit')
+    shipCells.forEach((cell) => {
         cell.classList.remove('has-ship')
+    })
+    
+    missedCells.forEach((cell) => {
+        cell.classList.remove('miss')
+    })
+
+    hitCells.forEach((cell) => {
+        cell.classList.remove('hit')
     })
 }
 
@@ -327,6 +375,7 @@ function resetGame( player ){
     resetButtons.forEach((resetButton) => {
         resetButton.addEventListener('click' , () => {
             player.gameboard.clearPlayerBoard()
+            player.reset()
             clearMarkedShippCells()
             openShipPlacement()
             removeSelectedShip()
@@ -390,6 +439,10 @@ function getAdjacentCells(row, col){
 }
 
 function isCellUntouched(board, row, col){
+    if(row < 0 || row >= board.length || col < 0 || col >= board[0].length){
+        return false
+    }
+    
     return board[row][col] !== 'hit' && board[row][col] !== 'miss'
 }
 
@@ -481,7 +534,6 @@ function setUpEnemyGrid( player ){
 
     //Remember to remove later
     console.log(enemy)
-    styleAllShipsOnGrid(enemy, grid)
     enemyGrid( enemy , player , controller )
 }
 

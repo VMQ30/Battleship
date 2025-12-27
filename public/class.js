@@ -90,6 +90,16 @@ class Player{
         this.targetQueue = []
         this.direction = null
     }
+
+    reset(){
+        this.name = ''
+        this.gameboard = new Gameboard()
+
+        this.mode = 'hunt'
+        this.hitStack = []
+        this.targetQueue = []
+        this.direction = null
+    }
 }
 
 class GameController{
