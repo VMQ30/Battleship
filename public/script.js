@@ -372,6 +372,7 @@ function clearBoard( player ){
 
 function resetGame( player ){
     const resetButtons = document.querySelectorAll('.reset')
+
     resetButtons.forEach((resetButton) => {
         resetButton.addEventListener('click' , () => {
             player.gameboard.clearPlayerBoard()
@@ -380,6 +381,7 @@ function resetGame( player ){
             openShipPlacement()
             removeSelectedShip()
             removeDisableShip()
+            document.querySelector('.begin-game').disabled = true
         })
     })
 }
@@ -442,20 +444,19 @@ function isCellUntouched(board, row, col){
     if(row < 0 || row >= board.length || col < 0 || col >= board[0].length){
         return false
     }
-    
+
     return board[row][col] !== 'hit' && board[row][col] !== 'miss'
 }
 
 function determineDirection(enemy){
-    const [[r1, c1], [r2, c2]] = enemy.hitStack
-
-    enemy.direction = r1 === r2 ? 'horizontal' : 'vertical'
+    const [[r1, c1], [r2, c2]] = enemy.hitStack;
+    enemy.direction = r1 === r2 ? 'horizontal' : 'vertical';
 
     enemy.targetQueue = enemy.hitStack.flatMap(([r, c]) =>
         enemy.direction === 'horizontal'
             ? [[r, c - 1], [r, c + 1]]
             : [[r - 1, c], [r + 1, c]]
-    )
+    ).filter(([r, c]) => isCellUntouched(enemy.gameboard.board, r, c)); // only untouched cells
 }
 
 function resetEnemyAI(enemy){
@@ -478,7 +479,7 @@ function huntAttack( player , enemy ){
 
 function targetAttack( player , enemy ){
     while( enemy.targetQueue.length ){
-        const [ row , col ] = enemy.targetQueue.pop()
+        const [ row , col ] = enemy.targetQueue.shift()
         if(isCellUntouched( player.gameboard.board , row , col )) return[ row , col ]
     }
 
