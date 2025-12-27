@@ -84,6 +84,11 @@ class Player{
     constructor( name ){
         this.name = name
         this.gameboard = new Gameboard()
+
+        this.mode = 'hunt'
+        this.hitStack = []
+        this.targetQueue = []
+        this.direction = null
     }
 }
 

@@ -380,17 +380,90 @@ function playerTurnStyling(instructions){
     instructions.textContent = 'Your Turn - Select a Target'
 }
 
+function getAdjacentCells(row, col){
+    return [
+        [row - 1, col],
+        [row + 1, col],
+        [row, col - 1],
+        [row, col + 1],
+    ].filter(([r, c]) => r >= 0 && r < 10 && c >= 0 && c < 10)
+}
 
-function enemyAttack( player , enemy ){
+function isCellUntouched(board, row, col){
+    return board[row][col] !== 'hit' && board[row][col] !== 'miss'
+}
+
+function determineDirection(enemy){
+    const [[r1, c1], [r2, c2]] = enemy.hitStack
+
+    enemy.direction = r1 === r2 ? 'horizontal' : 'vertical'
+
+    enemy.targetQueue = enemy.hitStack.flatMap(([r, c]) =>
+        enemy.direction === 'horizontal'
+            ? [[r, c - 1], [r, c + 1]]
+            : [[r - 1, c], [r + 1, c]]
+    )
+}
+
+function resetEnemyAI(enemy){
+    enemy.mode = 'hunt'
+    enemy.hitStack = []
+    enemy.targetQueue = []
+    enemy.direction = null
+}
+
+function huntAttack( player , enemy ){
+    let row, col
+
+    do {
+        row = randomNum(10)
+        col = randomNum(10)
+    } while (!isCellUntouched(player.gameboard.board, row, col))
+
+    return [row, col]
+}
+
+function targetAttack( player , enemy ){
+    while( enemy.targetQueue.length ){
+        const [ row , col ] = enemy.targetQueue.pop()
+        if(isCellUntouched( player.gameboard.board , row , col )) return[ row , col ]
+    }
+
+    resetEnemyAI(enemy)
+    return huntAttack(player)
+}
+
+function enemyAttack(player, enemy){
+    let row, col
+
+    if (enemy.mode === 'hunt') {
+        [row, col] = huntAttack(player)
+    } else {
+        [row, col] = targetAttack(player, enemy)
+    }
+
     const grid = document.querySelector('.player-one-grid')
-    
-    let row = randomNum(10)
-    let col = randomNum(10)
-    let cell = grid.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`)
-    checkIfShipIsHit( cell , player )
-    checkIfPlayerHasNoShip( enemy , player )
+    const cell = grid.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`)
+
+    const isHit = checkIfShipIsHit(cell, player , enemy )
+
+    if (isHit) {
+        enemy.hitStack.push([row, col])
+
+        if (enemy.mode === 'hunt') {
+            enemy.mode = 'target'
+            enemy.targetQueue = getAdjacentCells(row, col)
+        }
+
+        if (enemy.hitStack.length === 2 && !enemy.direction) {
+            determineDirection(enemy)
+        }
+    } else if (enemy.mode === 'target' && enemy.targetQueue.length === 0) {
+        resetEnemyAI(enemy)
+    }
 
 }
+
 
 function getEnemyGrid(){
     return document.querySelector('.player-two-grid')
@@ -420,11 +493,14 @@ function enemyGrid( enemy , player , controller ){
         cell.addEventListener('click' , () => {
             if (!controller.canPlayerAct()) return
 
-            checkIfShipIsHit( cell , enemy )
-            checkIfPlayerHasNoShip( player , enemy )
+            checkIfShipIsHit( cell , enemy , player)
+            
 
             controller.endPlayerTurn()
             enemyTurn( controller )
+
+            console.log(player)
+            console.log(enemy)
         })
     })
 }
@@ -432,11 +508,11 @@ function enemyGrid( enemy , player , controller ){
 function checkIfPlayerHasNoShip( playerOne , playerTwo ){
     const hasNoShips = playerTwo.gameboard.noShips()
     const instructions = document.querySelector('.instructions-text')
-
+    
     if(hasNoShips) instructions.textContent = `${playerOne.name} has won!`
 }
 
-function checkIfShipIsHit( cell , player ){
+function checkIfShipIsHit( cell , player , enemy ){
     const col = Number(cell.getAttribute('data-col'))
     const row = Number(cell.getAttribute('data-row'))
     const isHit = player.gameboard.receiveAttack( row , col )
@@ -444,7 +520,9 @@ function checkIfShipIsHit( cell , player ){
     if( isHit ) cellHit( cell )
     else cellMiss( cell )
 
-    console.log(player)
+    checkIfPlayerHasNoShip( player , enemy )
+
+    return isHit
 }
 
 function cellHit( cell ){
