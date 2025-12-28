@@ -1,589 +1,636 @@
-import { Ship , Player , GameController } from './class.js'
+import { Ship, Player, GameController } from "./class.js";
 
-( function() {
-    setUpUI()
-    getPlayerName()
-})()
+(function () {
+  setUpUI();
+  getPlayerName();
+})();
 
-function closeModal(){
-    const modal = document.querySelector('.modal-container')
-    console.log(modal)
-    modal.style.display = 'none'
-    document.body.classList.remove('no-scroll')   
+function closeModal() {
+  const modal = document.querySelector(".modal-container");
+  modal.style.display = "none";
+  document.body.classList.remove("no-scroll");
 }
 
-function getPlayerName(){
-    document.body.classList.add('no-scroll')
-    const button = document.querySelector('.play-button')
-    
-    button.addEventListener('click' , () => {
-        const name = document.querySelector('.name').value
+function getPlayerName() {
+  document.body.classList.add("no-scroll");
+  const button = document.querySelector(".play-button");
 
-        if (!name){
-            createErrorMessage('*Error: Name is Required')
-        }
+  button.addEventListener("click", () => {
+    const name = document.querySelector(".name").value;
 
-        else if( name.length < 2 ){
-            createErrorMessage('*Error: Name is too short')
-        }
-
-        else if( name.length > 12 ){
-            createErrorMessage('*Error: Name is too long')
-        }
-
-        else{
-            closeModal()
-            const player = createPlayer( 'Player One' )
-            setUpGame( player )
-        }
-    })
+    if (!name) {
+      createErrorMessage("*Error: Name is Required");
+    } else if (name.length < 2) {
+      createErrorMessage("*Error: Name is too short");
+    } else if (name.length > 12) {
+      createErrorMessage("*Error: Name is too long");
+    } else {
+      closeModal();
+      const player = createPlayer("Player One");
+      setUpGame(player);
+    }
+  });
 }
 
-function createErrorMessage( message ){
-    const inputBox = document.querySelector('.error-message')
-    inputBox.innerHTML = ''
-    const error = document.createElement('p')
-    error.textContent = message
-    error.classList.add('error')
-    inputBox.appendChild(error)
+function createErrorMessage(message) {
+  const inputBox = document.querySelector(".error-message");
+  inputBox.innerHTML = "";
+  const error = document.createElement("p");
+  error.textContent = message;
+  error.classList.add("error");
+  inputBox.appendChild(error);
 }
 //Setup
-function setUpGame( player ){
-    setUpShipPlacement( player )
-    setUpGameControls( player )
+function setUpGame(player) {
+  setUpShipPlacement(player);
+  setUpGameControls(player);
 }
 
-function setUpUI(){
-    openShipPlacement()
-    renderingBoardCells()
-    toggleOrientationButton()
+function setUpUI() {
+  openShipPlacement();
+  renderingBoardCells();
+  toggleOrientationButton();
 }
 
-function setUpShipPlacement( player ){
-    hoverShip( player )
-    enableAutoDeploy( player )
+function setUpShipPlacement(player) {
+  hoverShip(player);
+  enableAutoDeploy(player);
 }
 
-function setUpGameControls( player ){
-    resetGame( player )
+function setUpGameControls(player) {
+  resetGame(player);
 }
 
 //Board Rendering
 
-function renderingBoardCells(){
-    const gridSize = 11
-    const grids = document.querySelectorAll('.game-grid')
-    grids.forEach( ( grid ) => {
-        for( let i = 0 ; i < gridSize ; i++ ){
-            for( let j = 0 ; j < gridSize ; j++ ){
-                createCell( i , j , grid )
-            }
-        }
-    })
+function renderingBoardCells() {
+  const gridSize = 11;
+  const grids = document.querySelectorAll(".game-grid");
+  grids.forEach((grid) => {
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        createCell(i, j, grid);
+      }
+    }
+  });
 }
 
-function createCell( i , j , grid ){
-    const cell = document.createElement('div')
+function createCell(i, j, grid) {
+  const cell = document.createElement("div");
 
-    if ( i === 0 && j === 0 ) cell.classList.add('game-header')
+  if (i === 0 && j === 0) cell.classList.add("game-header");
+  else if (i === 0) {
+    const letterHeader = document.createElement("p");
+    letterHeader.textContent = String.fromCharCode(65 + (j - 1));
+    cell.appendChild(letterHeader);
+    cell.classList.add("game-header");
+  } else if (j === 0) {
+    const letterHeader = document.createElement("p");
+    letterHeader.textContent = i;
+    cell.appendChild(letterHeader);
+    cell.classList.add("game-header");
+  } else {
+    cell.dataset.row = i - 1;
+    cell.dataset.col = j - 1;
+    cell.setAttribute(
+      "aria-label",
+      `Row ${i} Column ${String.fromCharCode(64 + j)}`
+    );
+    cell.classList.add("cell");
+  }
 
-    else if ( i === 0 ){
-        const letterHeader = document.createElement('p')
-        letterHeader.textContent = String.fromCharCode( 65 + (j - 1) )
-        cell.appendChild(letterHeader)
-        cell.classList.add('game-header')
-    }
-
-    else if ( j === 0 ){
-        const letterHeader = document.createElement('p')
-        letterHeader.textContent = i
-        cell.appendChild(letterHeader)
-        cell.classList.add('game-header')
-    }
-
-    else {
-        cell.dataset.row = i - 1
-        cell.dataset.col = j - 1
-        cell.classList.add('cell')
-    } 
-    
-    grid.appendChild(cell)
+  grid.appendChild(cell);
 }
 
 //UI Controls
 
-function openMainGame(){
-    const mainGameScreen = document.querySelector('.main-game')
-    const shipPlacementScreen = document.querySelector('.ship-placement')
-    mainGameScreen.style.display = 'flex'
-    shipPlacementScreen.style.display = 'none'
+function openMainGame() {
+  const mainGameScreen = document.querySelector(".main-game");
+  const shipPlacementScreen = document.querySelector(".ship-placement");
+  mainGameScreen.style.display = "flex";
+  shipPlacementScreen.style.display = "none";
 }
 
-function openShipPlacement(){
-    const mainGameScreen = document.querySelector('.main-game')
-    const shipPlacementScreen = document.querySelector('.ship-placement')
-    mainGameScreen.style.display = 'none'
-    shipPlacementScreen.style.display = 'flex'
+function openShipPlacement() {
+  const mainGameScreen = document.querySelector(".main-game");
+  const shipPlacementScreen = document.querySelector(".ship-placement");
+  mainGameScreen.style.display = "none";
+  shipPlacementScreen.style.display = "flex";
 }
 
-function toggleOrientationButton(){
-    const toggleButton = document.querySelector('.ship-orientation')
-    toggleButton.addEventListener( 'click' , () => {
-        const orientation = toggleButton.getAttribute('data-orientation')
-        if( orientation === 'horizontal' ){
-            toggleButton.dataset.orientation = 'vertical'
-            toggleButton.textContent = 'Vertical'
-        }
-        else{
-            toggleButton.dataset.orientation = 'horizontal'
-            toggleButton.textContent = 'Horizontal'
-        }
-    })
+function toggleOrientationButton() {
+  const toggleButton = document.querySelector(".ship-orientation");
+  toggleButton.addEventListener("click", () => {
+    const orientation = toggleButton.getAttribute("data-orientation");
+    if (orientation === "horizontal") {
+      toggleButton.dataset.orientation = "vertical";
+      toggleButton.textContent = "Vertical";
+    } else {
+      toggleButton.dataset.orientation = "horizontal";
+      toggleButton.textContent = "Horizontal";
+    }
+  });
 }
 
-function beginGame( player ){
-    const beginGame = document.querySelector('.begin-game')
-    const playerOneMainGrid = document.querySelector('.player-one .game-grid')
+function beginGame(player) {
+  const beginGame = document.querySelector(".begin-game");
+  const playerOneMainGrid = document.querySelector(".player-one .game-grid");
 
-    beginGame.addEventListener('click' , () => {
-        openMainGame()
-        setUpEnemyGrid( player )
-        styleAllShipsOnGrid(player, playerOneMainGrid)
-    })
+  beginGame.addEventListener("click", () => {
+    openMainGame();
+    setUpEnemyGrid(player);
+    styleAllShipsOnGrid(player, playerOneMainGrid);
+  });
 }
 
-function styleAllShipsOnGrid( player , grid ){
-    player.gameboard.ships.forEach( ( ship ) => {
-        const { length , coordinates , orientation } = ship
-        markShipCells( coordinates[0] , coordinates[1] , orientation , length , grid )
-    })
+function styleAllShipsOnGrid(player, grid) {
+  player.gameboard.ships.forEach((ship) => {
+    const { length, coordinates, orientation } = ship;
+    markShipCells(coordinates[0], coordinates[1], orientation, length, grid);
+  });
 }
 
 //Ship Placements
 
-function hoverShip( player ){
-    const ships = document.querySelectorAll('.ships')
-    const currentGrid = document.querySelector('.place-ships')
-    const cells = currentGrid.querySelectorAll('.cell')
+function hoverShip(player) {
+  const ships = document.querySelectorAll(".ships");
+  const currentGrid = document.querySelector(".place-ships");
+  const cells = currentGrid.querySelectorAll(".cell");
 
-    let selectedShip = { size: 0, name: '' }
-    
-    ships.forEach( ( ship ) => {
-        ship.addEventListener('click' , () => {
-            highlightSelectedShip( ship );
-            selectedShip = getShipDetails(ship)
-        })
-    })
+  let selectedShip = { size: 0, name: "" };
 
-    cells.forEach( ( cell ) => {
-        cell.addEventListener( 'mouseenter' , () => {
-            highlightCell( cell , currentGrid , selectedShip.size )
-        })
+  ships.forEach((ship) => {
+    ship.addEventListener("click", () => {
+      highlightSelectedShip(ship);
+      selectedShip = getShipDetails(ship);
+    });
+  });
 
-        cell.addEventListener( 'mouseleave' , () => {
-            removeHighlight( cells )
-        })
+  cells.forEach((cell) => {
+    cell.addEventListener("mouseenter", () => {
+      highlightCell(cell, currentGrid, selectedShip.size);
+    });
 
-        cell.addEventListener( 'click' , () => {
-            const isShipPlaced = cellClicked( selectedShip.size , player , selectedShip.name , cell )
-            if(isShipPlaced){
-                selectedShip = { size : 0 , name : '' }
-            }
-        })
-    })
+    cell.addEventListener("mouseleave", () => {
+      removeHighlight(cells);
+    });
+
+    cell.addEventListener("click", () => {
+      const isShipPlaced = cellClicked(
+        selectedShip.size,
+        player,
+        selectedShip.name,
+        cell
+      );
+      if (isShipPlaced) {
+        selectedShip = { size: 0, name: "" };
+      }
+    });
+  });
 }
 
-function getOrientation(){
-    return document.querySelector('.ship-orientation').getAttribute('data-orientation')
+function getOrientation() {
+  return document
+    .querySelector(".ship-orientation")
+    .getAttribute("data-orientation");
 }
 
-function getPlacementGrid(){
-    return document.querySelector('.place-ships')
+function getPlacementGrid() {
+  return document.querySelector(".place-ships");
 }
 
-function cellClicked( shipSize , player , shipName , cell ){
-    if(shipSize === 0) return alert('Pick a Ship')
-            
-    const colCords = Number(cell.getAttribute('data-col'))
-    const rowCords = Number(cell.getAttribute('data-row'))
-    const orientation = getOrientation()
-    const grid = getPlacementGrid()
+function cellClicked(shipSize, player, shipName, cell) {
+  if (shipSize === 0) return alert("Pick a Ship");
 
-    const isPlaced = placeShip( shipSize , rowCords , colCords , orientation , player , shipName) 
-    
-    if(isPlaced){
-        styleShipPlaced( rowCords , colCords , orientation , shipSize , shipName , player , grid )
-    }
-    
-    return isPlaced
+  const colCords = Number(cell.getAttribute("data-col"));
+  const rowCords = Number(cell.getAttribute("data-row"));
+  const orientation = getOrientation();
+  const grid = getPlacementGrid();
+
+  const isPlaced = placeShip(
+    shipSize,
+    rowCords,
+    colCords,
+    orientation,
+    player,
+    shipName
+  );
+
+  if (isPlaced) {
+    styleShipPlaced(
+      rowCords,
+      colCords,
+      orientation,
+      shipSize,
+      shipName,
+      player,
+      grid
+    );
+  }
+
+  return isPlaced;
 }
 
-function styleShipPlaced( rowCords , colCords , orientation , shipSize , shipName , player , grid){
-    markShipCells( rowCords , colCords , orientation , shipSize , grid )
-    checkIfAllShipsArePlaced( player )
-    const shipButton = document.querySelector(`[data-name='${shipName}']`)
-    disableShip(shipButton)
+function styleShipPlaced(
+  rowCords,
+  colCords,
+  orientation,
+  shipSize,
+  shipName,
+  player,
+  grid
+) {
+  markShipCells(rowCords, colCords, orientation, shipSize, grid);
+  checkIfAllShipsArePlaced(player);
+  const shipButton = document.querySelector(`[data-name='${shipName}']`);
+  disableShip(shipButton);
 }
 
-function placeShip( shipSize , rowCords , colCords , orientation , player , shipName ){
-    const newShip = new Ship( shipSize , shipName , orientation)
-    return player.gameboard.placeShip( newShip , rowCords , colCords , orientation)
-}  
-
-function enableAutoDeploy( player ){
-    const autoDeployButton = document.querySelector('.auto-deploy')
-    const grid = getPlacementGrid()
-    autoDeployButton.addEventListener('click' , () => {
-        clearBoard( player )
-        clearMarkedShippCells()
-        autoDeploy( player , true , grid )
-    })
+function placeShip(
+  shipSize,
+  rowCords,
+  colCords,
+  orientation,
+  player,
+  shipName
+) {
+  const newShip = new Ship(shipSize, shipName, orientation);
+  return player.gameboard.placeShip(newShip, rowCords, colCords, orientation);
 }
 
-function getShipDetails( ship ){
-    return { 
-        size : Number(ship.getAttribute('data-ship')), 
-        name : ship.getAttribute('data-name')
-    }
+function enableAutoDeploy(player) {
+  const autoDeployButton = document.querySelector(".auto-deploy");
+  const grid = getPlacementGrid();
+  autoDeployButton.addEventListener("click", () => {
+    clearBoard(player);
+    clearMarkedShippCells();
+    autoDeploy(player, true, grid);
+  });
+}
+
+function getShipDetails(ship) {
+  return {
+    size: Number(ship.getAttribute("data-ship")),
+    name: ship.getAttribute("data-name"),
+  };
 }
 
 //Ship Highlighting / Styling
 
-function highlightSelectedShip( ship ){
-    removeSelectedShip()
-    ship.classList.add('selected-ship')
+function highlightSelectedShip(ship) {
+  removeSelectedShip();
+  ship.classList.add("selected-ship");
 }
 
-function removeSelectedShip(){
-    const ships = document.querySelectorAll('.ships')
-    ships.forEach( ( ship ) => {
-        ship.classList.remove('selected-ship')
-        ship.style.pointerEvents = 'all'
-    })
+function removeSelectedShip() {
+  const ships = document.querySelectorAll(".ships");
+  ships.forEach((ship) => {
+    ship.classList.remove("selected-ship");
+    ship.style.pointerEvents = "all";
+  });
 }
 
-function disableShip( ship ){
-    ship.classList.add('disable-ship')
-    ship.style.pointerEvents = 'none'
+function disableShip(ship) {
+  ship.classList.add("disable-ship");
+  ship.style.pointerEvents = "none";
 }
 
-function removeDisableShip(){
-    const ships = document.querySelectorAll('.ships')
-    ships.forEach((ship) =>{
-        ship.classList.remove('disable-ship')
-    })
+function removeDisableShip() {
+  const ships = document.querySelectorAll(".ships");
+  ships.forEach((ship) => {
+    ship.classList.remove("disable-ship");
+  });
 }
 
-function highlightCell( cell , currentGrid , shipSize ){
-    const colCords = Number(cell.getAttribute('data-col'))
-    const rowCords = Number(cell.getAttribute('data-row'))
-    const orientation = document.querySelector('.ship-orientation').getAttribute('data-orientation')
+function highlightCell(cell, currentGrid, shipSize) {
+  const colCords = Number(cell.getAttribute("data-col"));
+  const rowCords = Number(cell.getAttribute("data-row"));
+  const orientation = document
+    .querySelector(".ship-orientation")
+    .getAttribute("data-orientation");
 
-    let selectedCells = []
-    
-    for(let i = 0 ; i < shipSize ; i++ ){
-        const newCells = orientation === 'vertical' ? getCell( rowCords + i , colCords , currentGrid ) : getCell( rowCords , colCords + i , currentGrid )
-        selectedCells.push( newCells )
-    }
+  let selectedCells = [];
 
-    selectedCells.forEach( ( selectedCell ) => {
-        selectedCell.classList.add('selected')
-    })
+  for (let i = 0; i < shipSize; i++) {
+    const newCells =
+      orientation === "vertical"
+        ? getCell(rowCords + i, colCords, currentGrid)
+        : getCell(rowCords, colCords + i, currentGrid);
+    selectedCells.push(newCells);
+  }
+
+  selectedCells.forEach((selectedCell) => {
+    selectedCell.classList.add("selected");
+  });
 }
 
-function removeHighlight( cells ){
-    cells.forEach((selectedCell) => {
-        selectedCell.classList.remove('selected')
-    })
+function removeHighlight(cells) {
+  cells.forEach((selectedCell) => {
+    selectedCell.classList.remove("selected");
+  });
 }
 
-function markShipCells( rowCords , colCords , orientation , shipSize , currentGrid ){
-    for(let i = 0 ; i < shipSize ; i++ ){
-        const newCells = orientation === 'vertical' ? getCell( rowCords + i , colCords , currentGrid ) : getCell( rowCords , colCords + i , currentGrid )
-        newCells.classList.add('has-ship')
-    }
+function markShipCells(rowCords, colCords, orientation, shipSize, currentGrid) {
+  for (let i = 0; i < shipSize; i++) {
+    const newCells =
+      orientation === "vertical"
+        ? getCell(rowCords + i, colCords, currentGrid)
+        : getCell(rowCords, colCords + i, currentGrid);
+    newCells.classList.add("has-ship");
+  }
 }
 
-function clearMarkedShippCells(){
-    const shipCells = document.querySelectorAll('.has-ship')
-    const missedCells = document.querySelectorAll('.miss')
-    const hitCells = document.querySelectorAll('.hit')
-    shipCells.forEach((cell) => {
-        cell.classList.remove('has-ship')
-    })
-    
-    missedCells.forEach((cell) => {
-        cell.classList.remove('miss')
-    })
+function clearMarkedShippCells() {
+  const shipCells = document.querySelectorAll(".has-ship");
+  const missedCells = document.querySelectorAll(".miss");
+  const hitCells = document.querySelectorAll(".hit");
+  shipCells.forEach((cell) => {
+    cell.classList.remove("has-ship");
+  });
 
-    hitCells.forEach((cell) => {
-        cell.classList.remove('hit')
-    })
+  missedCells.forEach((cell) => {
+    cell.classList.remove("miss");
+  });
+
+  hitCells.forEach((cell) => {
+    cell.classList.remove("hit");
+  });
 }
 
-function getCell( row , col , grid){
-    return  grid.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`)
+function getCell(row, col, grid) {
+  return grid.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
 }
 
 //Auto Deploy
 
-function getRandomOrientation(){
-    const orientation = [ 'vertical' , 'horizontal' ]
-    return orientation[(randomNum( 2 )) % 2]
+function getRandomOrientation() {
+  const orientation = ["vertical", "horizontal"];
+  return orientation[randomNum(2) % 2];
 }
 
-function autoDeploy( player , style = true , grid ){
-    const shipInfo = {'Carrier' : 5 , 'Battleship' : 4 , 'Cruiser' : 3 , 'Submarine' : 3 , 'Destroyer' : 2 }
+function autoDeploy(player, style = true, grid) {
+  const shipInfo = {
+    Carrier: 5,
+    Battleship: 4,
+    Cruiser: 3,
+    Submarine: 3,
+    Destroyer: 2,
+  };
 
-    for( const shipName in shipInfo ){
-        const shipSize = shipInfo[shipName]
-        let isShipPlaced = false
+  for (const shipName in shipInfo) {
+    const shipSize = shipInfo[shipName];
+    let isShipPlaced = false;
 
-        while(!isShipPlaced){
-            const randomCol = randomNum( 10 )
-            const randomRow = randomNum( 10 )
-            const randomOrientation = getRandomOrientation()
+    while (!isShipPlaced) {
+      const randomCol = randomNum(10);
+      const randomRow = randomNum(10);
+      const randomOrientation = getRandomOrientation();
 
-            isShipPlaced = placeShip( shipSize , randomRow , randomCol , randomOrientation , player , shipName)
-            if( isShipPlaced && style ){
-                styleShipPlaced( randomRow , randomCol , randomOrientation , shipSize , shipName , player , grid)
-            }
-        }
+      isShipPlaced = placeShip(
+        shipSize,
+        randomRow,
+        randomCol,
+        randomOrientation,
+        player,
+        shipName
+      );
+      if (isShipPlaced && style) {
+        styleShipPlaced(
+          randomRow,
+          randomCol,
+          randomOrientation,
+          shipSize,
+          shipName,
+          player,
+          grid
+        );
+      }
     }
-    console.log(player)
+  }
 }
 
-function randomNum( max ){
-    return Math.floor(Math.random() * max )
-} 
+function randomNum(max) {
+  return Math.floor(Math.random() * max);
+}
 
 //Game Control
 
-function checkIfAllShipsArePlaced( player ){
-    if ((player.gameboard.ships).length === 5){
-        document.querySelector('.begin-game').disabled = false
-        beginGame( player )
-    }
+function checkIfAllShipsArePlaced(player) {
+  if (player.gameboard.ships.length === 5) {
+    document.querySelector(".begin-game").disabled = false;
+    beginGame(player);
+  }
 }
 
-function clearBoard( player ){
-    player.gameboard.clearPlayerBoard()
+function clearBoard(player) {
+  player.gameboard.clearPlayerBoard();
 }
 
-function resetGame( player ){
-    const resetButtons = document.querySelectorAll('.reset')
+function resetGame(player) {
+  const resetButtons = document.querySelectorAll(".reset");
 
-    resetButtons.forEach((resetButton) => {
-        resetButton.addEventListener('click' , () => {
-            player.gameboard.clearPlayerBoard()
-            player.reset()
-            clearMarkedShippCells()
-            openShipPlacement()
-            removeSelectedShip()
-            removeDisableShip()
-            document.querySelector('.begin-game').disabled = true
-        })
-    })
+  resetButtons.forEach((resetButton) => {
+    resetButton.addEventListener("click", () => {
+      player.gameboard.clearPlayerBoard();
+      player.reset();
+      clearMarkedShippCells();
+      openShipPlacement();
+      removeSelectedShip();
+      removeDisableShip();
+      document.querySelector(".begin-game").disabled = true;
+    });
+  });
 }
 
 //Game Setup
 
-function createPlayer( name ){
-    const playerOne = new Player( name )
-    return playerOne
+function createPlayer(name) {
+  const playerOne = new Player(name);
+  return playerOne;
 }
-
-
-
-
-
-
-
 
 //begin game
 
-function enemyTurn( controller ){
-    const instructions = document.querySelector('.instructions-text')
-    enemyTurnStyling(instructions)
+function enemyTurn(controller) {
+  const instructions = document.querySelector(".instructions-text");
+  enemyTurnStyling(instructions);
 
-    setTimeout(() => {
-        enemyAttack(controller.player , controller.enemy )
-        controller.endEnemyTurn()
-        playerTurnStyling(instructions)
-    }, 1000)
+  setTimeout(() => {
+    enemyAttack(controller.player, controller.enemy);
+    controller.endEnemyTurn();
+    playerTurnStyling(instructions);
+  }, 1000);
 }
 
-function enemyTurnStyling(instructions){
-    const enemyGrid = document.querySelector('.player-two-grid-wrapper')
-    const playerGrid = document.querySelector('.player-one-grid-wrapper')
+function enemyTurnStyling(instructions) {
+  const enemyGrid = document.querySelector(".player-two-grid-wrapper");
+  const playerGrid = document.querySelector(".player-one-grid-wrapper");
 
-    playerGrid.classList.add('active')
-    enemyGrid.classList.remove('active')
-    instructions.textContent = "Enemy's turn..."
+  playerGrid.classList.add("active");
+  enemyGrid.classList.remove("active");
+  instructions.textContent = "Enemy's turn...";
 }
 
-function playerTurnStyling(instructions){
-    const enemyGrid = document.querySelector('.player-two-grid-wrapper')
-    const playerGrid = document.querySelector('.player-one-grid-wrapper')
+function playerTurnStyling(instructions) {
+  const enemyGrid = document.querySelector(".player-two-grid-wrapper");
+  const playerGrid = document.querySelector(".player-one-grid-wrapper");
 
-    enemyGrid.classList.add('active')
-    playerGrid.classList.remove('active')
-    instructions.textContent = 'Your Turn - Select a Target'
+  enemyGrid.classList.add("active");
+  playerGrid.classList.remove("active");
+  instructions.textContent = "Your Turn - Select a Target";
 }
 
-function getAdjacentCells(row, col){
-    return [
-        [row - 1, col],
-        [row + 1, col],
-        [row, col - 1],
-        [row, col + 1],
-    ].filter(([r, c]) => r >= 0 && r < 10 && c >= 0 && c < 10)
+function getAdjacentCells(row, col) {
+  return [
+    [row - 1, col],
+    [row + 1, col],
+    [row, col - 1],
+    [row, col + 1],
+  ].filter(([r, c]) => r >= 0 && r < 10 && c >= 0 && c < 10);
 }
 
-function isCellUntouched(board, row, col){
-    if(row < 0 || row >= board.length || col < 0 || col >= board[0].length){
-        return false
+function isCellUntouched(board, row, col) {
+  if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
+    return false;
+  }
+
+  return board[row][col] !== "hit" && board[row][col] !== "miss";
+}
+
+function determineDirection(enemy) {
+  const [[r1], [r2]] = enemy.hitStack;
+  enemy.direction = r1 === r2 ? "horizontal" : "vertical";
+
+  enemy.targetQueue = enemy.hitStack
+    .flatMap(([r, c]) =>
+      enemy.direction === "horizontal"
+        ? [
+            [r, c - 1],
+            [r, c + 1],
+          ]
+        : [
+            [r - 1, c],
+            [r + 1, c],
+          ]
+    )
+    .filter(([r, c]) => isCellUntouched(enemy.gameboard.board, r, c)); // only untouched cells
+}
+
+function resetEnemyAI(enemy) {
+  enemy.mode = "hunt";
+  enemy.hitStack = [];
+  enemy.targetQueue = [];
+  enemy.direction = null;
+}
+
+function huntAttack(player) {
+  let row, col;
+
+  do {
+    row = randomNum(10);
+    col = randomNum(10);
+  } while (!isCellUntouched(player.gameboard.board, row, col));
+
+  return [row, col];
+}
+
+function targetAttack(player, enemy) {
+  while (enemy.targetQueue.length) {
+    const [row, col] = enemy.targetQueue.shift();
+    if (isCellUntouched(player.gameboard.board, row, col)) return [row, col];
+  }
+
+  resetEnemyAI(enemy);
+  return huntAttack(player);
+}
+
+function enemyAttack(player, enemy) {
+  let row, col;
+
+  if (enemy.mode === "hunt") {
+    [row, col] = huntAttack(player);
+  } else {
+    [row, col] = targetAttack(player, enemy);
+  }
+
+  const grid = document.querySelector(".player-one-grid");
+  const cell = grid.querySelector(
+    `.cell[data-row="${row}"][data-col="${col}"]`
+  );
+
+  const isHit = checkIfShipIsHit(cell, player, enemy);
+
+  if (isHit) {
+    enemy.hitStack.push([row, col]);
+
+    if (enemy.mode === "hunt") {
+      enemy.mode = "target";
+      enemy.targetQueue = getAdjacentCells(row, col);
     }
 
-    return board[row][col] !== 'hit' && board[row][col] !== 'miss'
-}
-
-function determineDirection(enemy){
-    const [[r1, c1], [r2, c2]] = enemy.hitStack;
-    enemy.direction = r1 === r2 ? 'horizontal' : 'vertical';
-
-    enemy.targetQueue = enemy.hitStack.flatMap(([r, c]) =>
-        enemy.direction === 'horizontal'
-            ? [[r, c - 1], [r, c + 1]]
-            : [[r - 1, c], [r + 1, c]]
-    ).filter(([r, c]) => isCellUntouched(enemy.gameboard.board, r, c)); // only untouched cells
-}
-
-function resetEnemyAI(enemy){
-    enemy.mode = 'hunt'
-    enemy.hitStack = []
-    enemy.targetQueue = []
-    enemy.direction = null
-}
-
-function huntAttack( player , enemy ){
-    let row, col
-
-    do {
-        row = randomNum(10)
-        col = randomNum(10)
-    } while (!isCellUntouched(player.gameboard.board, row, col))
-
-    return [row, col]
-}
-
-function targetAttack( player , enemy ){
-    while( enemy.targetQueue.length ){
-        const [ row , col ] = enemy.targetQueue.shift()
-        if(isCellUntouched( player.gameboard.board , row , col )) return[ row , col ]
+    if (enemy.hitStack.length === 2 && !enemy.direction) {
+      determineDirection(enemy);
     }
-
-    resetEnemyAI(enemy)
-    return huntAttack(player)
+  } else if (enemy.mode === "target" && enemy.targetQueue.length === 0) {
+    resetEnemyAI(enemy);
+  }
 }
 
-function enemyAttack(player, enemy){
-    let row, col
-
-    if (enemy.mode === 'hunt') {
-        [row, col] = huntAttack(player)
-    } else {
-        [row, col] = targetAttack(player, enemy)
-    }
-
-    const grid = document.querySelector('.player-one-grid')
-    const cell = grid.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`)
-
-    const isHit = checkIfShipIsHit(cell, player , enemy )
-
-    if (isHit) {
-        enemy.hitStack.push([row, col])
-
-        if (enemy.mode === 'hunt') {
-            enemy.mode = 'target'
-            enemy.targetQueue = getAdjacentCells(row, col)
-        }
-
-        if (enemy.hitStack.length === 2 && !enemy.direction) {
-            determineDirection(enemy)
-        }
-    } else if (enemy.mode === 'target' && enemy.targetQueue.length === 0) {
-        resetEnemyAI(enemy)
-    }
-
+function getEnemyGrid() {
+  return document.querySelector(".player-two-grid");
 }
 
+function setUpEnemyGrid(player) {
+  const grid = getEnemyGrid();
+  const enemy = createPlayer("Enemy");
 
-function getEnemyGrid(){
-    return document.querySelector('.player-two-grid')
+  autoDeploy(enemy, false, grid);
+  const controller = new GameController(player, enemy);
+  enemyGrid(enemy, player, controller);
 }
 
-function setUpEnemyGrid( player ){
-    const grid = getEnemyGrid()
-    const enemy = createPlayer('Enemy')
+function enemyGrid(enemy, player, controller) {
+  const enemyGrid = getEnemyGrid();
+  const cells = enemyGrid.querySelectorAll(".cell");
 
-    autoDeploy( enemy , false , grid )
-    
-    const controller = new GameController( player , enemy )
+  cells.forEach((cell) => {
+    cell.addEventListener("click", () => {
+      if (!controller.canPlayerAct()) return;
 
+      checkIfShipIsHit(cell, enemy, player);
 
-
-    //Remember to remove later
-    console.log(enemy)
-    enemyGrid( enemy , player , controller )
+      controller.endPlayerTurn();
+      enemyTurn(controller);
+    });
+  });
 }
 
-function enemyGrid( enemy , player , controller ){
-    const enemyGrid = getEnemyGrid()
-    const cells = enemyGrid.querySelectorAll('.cell')
+function checkIfPlayerHasNoShip(playerOne, playerTwo) {
+  const hasNoShips = playerTwo.gameboard.noShips();
+  const instructions = document.querySelector(".instructions-text");
 
-    cells.forEach((cell) => {
-        cell.addEventListener('click' , () => {
-            if (!controller.canPlayerAct()) return
-
-            checkIfShipIsHit( cell , enemy , player)
-            
-
-            controller.endPlayerTurn()
-            enemyTurn( controller )
-
-            console.log(player)
-            console.log(enemy)
-        })
-    })
+  if (hasNoShips) instructions.textContent = `${playerOne.name} has won!`;
 }
 
-function checkIfPlayerHasNoShip( playerOne , playerTwo ){
-    const hasNoShips = playerTwo.gameboard.noShips()
-    const instructions = document.querySelector('.instructions-text')
-    
-    if(hasNoShips) instructions.textContent = `${playerOne.name} has won!`
+function checkIfShipIsHit(cell, player, enemy) {
+  const col = Number(cell.getAttribute("data-col"));
+  const row = Number(cell.getAttribute("data-row"));
+  const isHit = player.gameboard.receiveAttack(row, col);
+
+  if (isHit) cellHit(cell);
+  else cellMiss(cell);
+
+  checkIfPlayerHasNoShip(player, enemy);
+
+  return isHit;
 }
 
-function checkIfShipIsHit( cell , player , enemy ){
-    const col = Number(cell.getAttribute('data-col'))
-    const row = Number(cell.getAttribute('data-row'))
-    const isHit = player.gameboard.receiveAttack( row , col )
-
-    if( isHit ) cellHit( cell )
-    else cellMiss( cell )
-
-    checkIfPlayerHasNoShip( player , enemy )
-
-    return isHit
+function cellHit(cell) {
+  cell.classList.add("hit");
+  cell.classList.remove("has-ship");
 }
 
-function cellHit( cell ){
-    cell.classList.add('hit')
-    cell.classList.remove('has-ship')
-}
-
-function cellMiss( cell ){
-    cell.classList.add('miss')
-    cell.classList.remove('has-ship')
+function cellMiss(cell) {
+  cell.classList.add("miss");
+  cell.classList.remove("has-ship");
 }

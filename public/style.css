@@ -1,588 +1,639 @@
 :root {
-    --background: #0a1219;
-    --foreground: #eff3f5;
-    --card: #111d27;
+  --background: #0a1219;
+  --foreground: #eff3f5;
+  --card: #111d27;
 
-    --primary-teal: #23b5c3;
-    --secondary: #1c2d3d;
-    --accent: #e85a32;
+  --primary-teal: #23b5c3;
+  --secondary: #1c2d3d;
+  --accent: #e85a32;
 
-    --muted: #212f3d;
-    --muted-foreground: #8a9ba3;
-    --border: #2d3e4d;
+  --muted: #212f3d;
+  --muted-foreground: #8a9ba3;
+  --border: #2d3e4d;
 
-    --ocean-deep: #071017;
-    --ocean-dark: #0f1c26;
-    --ocean-mid: #1c3847;
-    --ocean-surface: #248a9e;
-    --ocean-foam: #cde0e4;
+  --ocean-deep: #071017;
+  --ocean-dark: #0f1c26;
+  --ocean-mid: #1c3847;
+  --ocean-surface: #248a9e;
+  --ocean-foam: #cde0e4;
 
-    --naval-gold: #e6b31a;
-    --miss-splash: #3a8fac;
-    --ship-hull: #3d4a57;
+  --naval-gold: #e6b31a;
+  --miss-splash: #3a8fac;
+  --ship-hull: #3d4a57;
 
-    --destructive: #df2020;
+  --destructive: #df2020;
 }
 
-@font-face{
-    font-family: 'Archivo';
-    src: url('fonts/ArchivoBlack-Regular.ttf');
-    font-style: normal;
+@font-face {
+  font-family: "Archivo";
+  src: url("fonts/ArchivoBlack-Regular.ttf");
+  font-style: normal;
 }
 
-@font-face{
-    font-family: 'Raleway';
-    src: url('fonts/Raleway-VariableFont_wght.ttf');
-    font-style: normal;
+@font-face {
+  font-family: "Raleway";
+  src: url("fonts/Raleway-VariableFont_wght.ttf");
+  font-style: normal;
 }
 
-html{
-    background-color: var(--background);
+html {
+  background-color: var(--background);
 }
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 /*Main Game*/
 
-.title{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  background-image:
+    repeating-linear-gradient(var(--border) 0 1px, transparent 1px 100%),
+    repeating-linear-gradient(90deg, var(--border) 0 1px, transparent 1px 100%);
+  background-size: 45px 45px;
 }
 
 .main-game,
-.ship-placement{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-image: 
-        repeating-linear-gradient(var(--border) 0 1px , transparent 1px 100%),
-        repeating-linear-gradient(90deg , var(--border) 0 1px , transparent 1px 100%);
-    background-size: 45px 45px;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    
+.ship-placement {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 .main-game h2,
-.ship-placement h2{
-    font-family: 'Archivo';
-    font-size: 4em;
-    color: var(--foreground);
-    margin: 0px 20px;
+.ship-placement h2 {
+  font-family: "Archivo";
+  font-size: clamp(2rem, 8vw, 4rem);
+  color: var(--foreground);
+  margin: 0px 20px;
 }
 
 .main-game h4,
-.ship-placement h4{
-    font-family: 'Raleway';
-    font-size: 1.4em;
-    font-weight: normal;
-    color: var(--muted-foreground);
+.ship-placement h4 {
+  font-family: "Raleway";
+  font-size: 1.4em;
+  font-weight: normal;
+  color: var(--muted-foreground);
 }
 
-.game-details{
-    margin: 20px;
-    display: flex;
+.game-details {
+  margin: 20px;
+  display: flex;
 }
 
-.game-details p{
-    color: var(--foreground);
-    font-family: 'Raleway';
-    font-size: 1em;
-    font-weight: bold;
-    margin-right: 20px;
-    background-color: var(--ocean-mid);
-    padding: 10px 25px;
-    border-radius: 5px;
+.game-details p {
+  color: var(--foreground);
+  font-family: "Raleway";
+  font-size: 1em;
+  font-weight: bold;
+  margin-right: 20px;
+  background-color: var(--ocean-mid);
+  padding: 10px 25px;
+  border-radius: 5px;
 }
 
-.game-details button{
-    background-color: var(--background);
-    color: var(--foreground);
-    padding: 10px 13px;
-    font-size: 1.1em;
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s ease-in-out;
+.game-details button {
+  background-color: var(--background);
+  color: var(--foreground);
+  padding: 10px 13px;
+  font-size: 1.1em;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
 }
 
-.game-details button:hover{
-    background-color:#3a90ac77;
-    border: 1px solid var(--primary-teal);
-    color: var(--primary-teal);
-    box-shadow: 0 0 5px var(--primary-teal);
+.game-details button:hover {
+  background-color: #3a90ac77;
+  border: 1px solid var(--primary-teal);
+  color: var(--primary-teal);
+  box-shadow: 0 0 5px var(--primary-teal);
 }
 
 /*Game grid*/
 
-.grid-container{
-    display: flex;
-    gap: 40px;
-    justify-content: center;
-    align-items: center;
-    margin-top: 30px;
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
 }
 
 .player-one-grid,
-.player-two-grid{
-    background-color: var(--ocean-dark);
-    border: 2px solid var(--ocean-mid);
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    z-index: 1;
+.player-two-grid {
+  background-color: var(--ocean-dark);
+  border: 2px solid var(--ocean-mid);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 1;
 }
 
 .player-one-grid h3,
-.player-two-grid h3{
-    font-family: 'Archivo';
-    font-size: 2em;
-    color: var(--primary-teal);
+.player-two-grid h3 {
+  font-family: "Archivo";
+  font-size: 2em;
+  color: var(--primary-teal);
 }
 
-.game-grid{
-    display: grid;
-    grid-template-columns: repeat(11 , 1fr);
-    padding: 20px;
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  padding: 20px;
+  width: 80vw;
+  max-width: 600px;
+  margin: auto;
 }
 
-.game-grid div{
-    background-color: var(--ocean-mid);
-    width: 50px;
-    height: 50px;
-    background-image: linear-gradient(150deg , var(--ocean-mid) 20% , var(--ocean-dark) 100%);
-    position: relative;
-    overflow: hidden;
+.game-grid div {
+  background-color: var(--ocean-mid);
+  background-image: linear-gradient(
+    150deg,
+    var(--ocean-mid) 20%,
+    var(--ocean-dark) 100%
+  );
+  position: relative;
+  overflow: hidden;
+
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 50px;
 }
 
 @keyframes wave-diagonal {
-    0% {
-        transform: translate(-15%, 15%);
-    }
-    50% {
-        transform: translate(15%, -15%);
-    }
-    100% {
-        transform: translate(-15%, 15%);
-    }
+  0% {
+    transform: translate(-15%, 15%);
+  }
+  50% {
+    transform: translate(15%, -15%);
+  }
+  100% {
+    transform: translate(-15%, 15%);
+  }
 }
 
-.game-grid div:not(.game-header){
-    border: 0.1px solid var(--border)
+.game-grid div:not(.game-header) {
+  border: 0.1px solid var(--border);
 }
 
-.game-grid div:not(.game-header)::before{
-    position: absolute;
-    content: '';
-    inset: -50%;
-    background-image: linear-gradient(
-        45deg,
-        transparent 40%,
-        #1c384761 50%,
-        transparent 60%
-    );
-    animation: wave-diagonal 5s linear infinite;
-    pointer-events: none;
+.game-grid div:not(.game-header)::before {
+  position: absolute;
+  content: "";
+  inset: -50%;
+  background-image: linear-gradient(
+    45deg,
+    transparent 40%,
+    #1c384761 50%,
+    transparent 60%
+  );
+  animation: wave-diagonal 5s linear infinite;
+  pointer-events: none;
 }
 
-.cell:hover{
-    cursor: crosshair;
+.cell:hover {
+  cursor: crosshair;
 }
 
-.game-grid .has-ship:not(.game-header){
-    background-image: linear-gradient(150deg , var(--ship-hull) 20% , var(--muted) 100%);
-    pointer-events: none;
+.game-grid .has-ship:not(.game-header) {
+  background-image: linear-gradient(
+    150deg,
+    var(--ship-hull) 20%,
+    var(--muted) 100%
+  );
+  pointer-events: none;
 }
 
-.game-grid .has-ship:not(.game-header)::before{
-    background-image: linear-gradient(
-        45deg,
-        transparent 40%,
-        #3d4a57 50%,
-        transparent 60%
-    );
+.game-grid .has-ship:not(.game-header)::before {
+  background-image: linear-gradient(
+    45deg,
+    transparent 40%,
+    #3d4a57 50%,
+    transparent 60%
+  );
 }
 
-.has-ship::after{
-    content: '';
-    background-image: url('./fonts/ship.svg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
+.has-ship::after {
+  content: "";
+  background-image: url("./fonts/ship.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
 
-.game-grid .selected{
-    background-image: linear-gradient(150deg , var(--ocean-surface) 20% , var(--ocean-mid) 100%);
+.game-grid .selected {
+  background-image: linear-gradient(
+    150deg,
+    var(--ocean-surface) 20%,
+    var(--ocean-mid) 100%
+  );
 }
 
-.game-grid .game-header{
-    background-color: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-image: none;
-    background: transparent;
+.game-grid .game-header {
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: none;
+  background: transparent;
 }
 
-.game-grid .game-header:hover{
-    cursor: auto;
+.game-grid .game-header:hover {
+  cursor: auto;
 }
 
-.game-grid .game-header p{
-    font-size: 1em;
-    font-family: 'Raleway';
-    font-weight: 600;
-    color: var(--muted-foreground)
+.game-grid .game-header p {
+  font-size: 1em;
+  font-family: "Raleway";
+  font-weight: 600;
+  color: var(--muted-foreground);
 }
 
-@property --angle{
-    syntax: "<angle>";
-    initial-value: 0deg;
-    inherits: false;
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
 }
 
-@keyframes spin{
-    from{
-        --angle: 0deg;
-    }
-    to{
-        --angle: 360deg;
-    }
+@keyframes spin {
+  from {
+    --angle: 0deg;
+  }
+  to {
+    --angle: 360deg;
+  }
 }
 
-.active{
-    position: relative;
-    z-index: 0;
+.active {
+  position: relative;
+  z-index: 0;
 }
 
 .active::before,
-.active::after{
-    position: absolute;
-    content: '';
-    width: 100%;
-    height: 100%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    padding: 1px;
-    border-radius: 10px;
-    background-image: conic-gradient(
-        from var(--angle),
-        #23b5c3 0% 25%,
-        transparent 25% 50%,
-        #23b5c3 50% 75%,
-        transparent 75% 100%
-    );  
-    animation: spin 5s linear infinite;
+.active::after {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  padding: 1px;
+  border-radius: 10px;
+  background-image: conic-gradient(
+    from var(--angle),
+    #23b5c3 0% 25%,
+    transparent 25% 50%,
+    #23b5c3 50% 75%,
+    transparent 75% 100%
+  );
+  animation: spin 5s linear infinite;
 }
 
-.active::before{
-    padding: 4px;
-    filter: blur(10px);
+.active::before {
+  padding: 4px;
+  filter: blur(10px);
 }
 
-.player-one .grid-wrapper .player-one-grid{
-    pointer-events: none;
+.player-one .grid-wrapper .player-one-grid {
+  pointer-events: none;
 }
 
-.player-two-grid .game-grid .has-ship:not(.game-header){
-    pointer-events: all;
+.player-two-grid .game-grid .has-ship:not(.game-header) {
+  pointer-events: all;
 }
 
 /* Ship Details */
 
 .player-one-ships-detail,
-.player-two-ships-detail{
-    margin-top: 40px;
-    background-color: var(--ocean-dark);
-    border-radius: 10px;
-    padding: 20px;
-    border: 2px solid var(--border);
-    h3{
-        color: var(--primary-teal);
-        font-size: 1.5em;
-        font-family: 'Archivo';
-        margin-bottom: 20px;
-    }
+.player-two-ships-detail {
+  margin-top: 40px;
+  background-color: var(--ocean-dark);
+  border-radius: 10px;
+  padding: 20px;
+  border: 2px solid var(--border);
+  h3 {
+    color: var(--primary-teal);
+    font-size: 1.5em;
+    font-family: "Archivo";
+    margin-bottom: 20px;
+  }
 }
 
-.ship-list div{
-    padding: 10px;
-    background-color: var(--secondary);
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-top: 10px;
-    border-radius: 10px;
+.ship-list div {
+  padding: 10px;
+  background-color: var(--secondary);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 10px;
+  border-radius: 10px;
 
-    p{
-        font-size: 1em;
-        font-family: 'Raleway';
-        font-weight: 600;
-        color: var(--foreground);
-    }
+  p {
+    font-size: 1em;
+    font-family: "Raleway";
+    font-weight: 600;
+    color: var(--foreground);
+  }
 }
 
 /*Placing Ships Screen*/
-.place-ship-wrapper{
-    display: flex;
-    gap: 30px;
+.place-ship-wrapper {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
 }
 
-.ship-sidebar{
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    background-color: var(--ocean-dark);
-    border-radius: 10px;
-    padding: 20px;
-    border: 2px solid var(--border);
-    h2{
-        color: var(--primary-teal);
-        font-size: 1.5em;
-        font-family: 'Archivo';
-        margin: 0;
-    }
+.ship-sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: var(--ocean-dark);
+  border-radius: 10px;
+  padding: 20px;
+  border: 2px solid var(--border);
+  h2 {
+    color: var(--primary-teal);
+    font-size: 1.5em;
+    font-family: "Archivo";
+    margin: 0;
+  }
 }
 
-.ship-title{
-    display: flex;
-    gap: 10px;
+.ship-title {
+  display: flex;
+  gap: 10px;
 }
 
-.ships{
-    padding: 10px 15px;
-    background-color: var(--secondary);
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-top: 20px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    transition: background-color 0.3s ease-in-out,
-                border 0.3s ease-in-out;
-    cursor: pointer;
+.ships {
+  padding: 10px 15px;
+  background-color: var(--secondary);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  transition:
+    background-color 0.3s ease-in-out,
+    border 0.3s ease-in-out;
+  cursor: pointer;
 
-    h3{
-        font-size: 1em;
-        font-family: 'Raleway';
-        font-weight: 600;
-        color: var(--foreground);
-        margin-bottom: 10px;
-    }
-}
-
-.ships:hover{
-    background-color: var(--ocean-mid);
-    border: 1px solid var(--ocean-surface);
-}
-
-.selected-ship{
-    background-color: var(--ocean-mid);
-    border: 1px solid var(--ocean-surface);
-    box-shadow: 0 0 10px var(--ocean-surface);
-}
-
-.disable-ship{
-    background-color: var(--ship-hull);
-    border: 1px solid var(--ocean-mid);
+  h3 {
+    font-size: 1em;
+    font-family: "Raleway";
+    font-weight: 600;
     color: var(--foreground);
-    box-shadow: inset 0 0 10px var(--border);
+    margin-bottom: 10px;
+  }
 }
 
-.ship-health{
-    display: flex;
-    gap: 5px;
+.ships:hover {
+  background-color: var(--ocean-mid);
+  border: 1px solid var(--ocean-surface);
 }
 
-.health-cell{
-    width: 20px;
-    height: 20px;
-    background-color: var(--ship-hull);
-    border: 1px solid var(--naval-gold);
-    border-radius: 5px;
+.selected-ship {
+  background-color: var(--ocean-mid);
+  border: 1px solid var(--ocean-surface);
+  box-shadow: 0 0 10px var(--ocean-surface);
+}
+
+.disable-ship {
+  background-color: var(--ship-hull);
+  border: 1px solid var(--ocean-mid);
+  color: var(--foreground);
+  box-shadow: inset 0 0 10px var(--border);
+}
+
+.ship-health {
+  display: flex;
+  gap: 5px;
+}
+
+.health-cell {
+  width: 20px;
+  height: 20px;
+  background-color: var(--ship-hull);
+  border: 1px solid var(--naval-gold);
+  border-radius: 5px;
 }
 
 .ship-orientation,
 .auto-deploy,
-.begin-game{
-    cursor: pointer;
-    font-size: 1em;
-    padding: 5px;
-    font-family: 'Raleway';
-    font-weight: 600;
-    border-radius: 7px;
-    margin-bottom: 10px;
-    color: var(--foreground);
-    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out , border 0.3s ease-in-out;
+.begin-game {
+  cursor: pointer;
+  font-size: 1em;
+  padding: 5px;
+  font-family: "Raleway";
+  font-weight: 600;
+  border-radius: 7px;
+  margin-bottom: 10px;
+  color: var(--foreground);
+  transition:
+    color 0.3s ease-in-out,
+    background-color 0.3s ease-in-out,
+    border 0.3s ease-in-out;
 }
 
-.ship-orientation{
-    margin-top: 20px;
-    border: 1.5px solid var(--muted);
-    background-color: var(--ocean-deep);
+.ship-orientation {
+  margin-top: 20px;
+  border: 1.5px solid var(--muted);
+  background-color: var(--ocean-deep);
 }
 
-.auto-deploy{
-    background-color: var(--ocean-mid);
-    border: 1.5px solid var(--ship-hull);
+.auto-deploy {
+  background-color: var(--ocean-mid);
+  border: 1.5px solid var(--ship-hull);
 }
 
-.begin-game{
-    background-color: var(--ocean-surface);
-    border: 1.5px solid var(--primary-teal);
+.begin-game {
+  background-color: #125f6e;
+  border: 1.5px solid var(--primary-teal);
 }
 
-.begin-game:disabled, 
-.begin-game[disabled]{
-    opacity: 0.5;
-    pointer-events: none;
+.begin-game:disabled,
+.begin-game[disabled] {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .ship-orientation:hover,
 .auto-deploy:hover,
-.begin-game:hover{
-    color: var(--ocean-deep);
-    border: 1.5px solid var(--destructive);
-    background-color: var(--accent);
+.begin-game:hover {
+  color: var(--ocean-deep);
+  border: 1.5px solid var(--destructive);
+  background-color: var(--accent);
 }
 
 *:focus {
   outline: 2px solid var(--naval-gold);
 }
 
-.game-grid .hit{
-    background-image: linear-gradient(150deg , var(--accent) 20% , var(--destructive) 100%);
-    pointer-events: none;
+.game-grid .hit {
+  background-image: linear-gradient(
+    150deg,
+    var(--accent) 20%,
+    var(--destructive) 100%
+  );
+  pointer-events: none;
 }
 
-.game-grid .hit:not(.game-header)::before{
-    background-image: linear-gradient(
-        45deg,
-        transparent 40%,
-        #f5714d 50%,
-        transparent 60%
-    );
+.game-grid .hit:not(.game-header)::before {
+  background-image: linear-gradient(
+    45deg,
+    transparent 40%,
+    #f5714d 50%,
+    transparent 60%
+  );
 }
 
-.game-grid .miss{
-    background-image: linear-gradient(150deg , var(--miss-splash) 20% , var(--ocean-mid) 100%);
-    pointer-events: none;
+.game-grid .miss {
+  background-image: linear-gradient(
+    150deg,
+    var(--miss-splash) 20%,
+    var(--ocean-mid) 100%
+  );
+  pointer-events: none;
 }
 
-.game-grid .miss:not(.game-header)::before{
-    background-image: linear-gradient(
-        45deg,
-        transparent 40%,
-        #4495af 50%,
-        transparent 60%
-    );
+.game-grid .miss:not(.game-header)::before {
+  background-image: linear-gradient(
+    45deg,
+    transparent 40%,
+    #4495af 50%,
+    transparent 60%
+  );
 }
 
-.modal-container{
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    background-color:#000000a0;
-    z-index: 10;
-    
+.modal-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000a0;
+  z-index: 10;
 }
 
-.modal{
-    position: absolute;
-    width: 50vw;
-    height: 60vh;
-    background-color: var(--card);
-    top: 50%;
-    left: 50%;
-    transform: translate( -50% , -50% );
-    padding: 60px 100px;
-    border-radius: 10px;
-    border: 2px solid var(--miss-splash);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+.modal {
+  width: 50vw;
+  height: 60vh;
+  position: absolute;
+  background-color: var(--card);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 60px 100px;
+  border-radius: 10px;
+  border: 2px solid var(--miss-splash);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .modal h2,
-.modal h3{
-    font-family: 'Archivo';
-    font-size: 3em;
-    color: var(--foreground);
+.modal h3 {
+  font-family: "Archivo";
+  font-size: clamp(1.5rem, 7vw, 3em);
+  color: var(--foreground);
 }
 
-.modal h3{
-    font-size: 1.5em;
+.modal h3 {
+  font-size: clamp(1rem, 4vw, 1.5em);
 }
 
-.modal p{
-    font-size: 1em;
-    font-family: 'Raleway';
-    font-weight: 400;
-    color: var(--muted-foreground);
-    margin-top: 10px;
+.modal p {
+  font-size: clamp(1rem, 1rem, 1.5em);
+  font-family: "Raleway";
+  font-weight: 400;
+  color: var(--muted-foreground);
+  margin-top: 10px;
 }
 
-.modal input{
-    margin-top: 15px;
-    background-color: var(--muted);
-    border: 2px solid var(--miss-splash);
-    padding: 7px;
-    font-size: 1em;
-    width: 100%;
-    border-radius: 5px;
-    color: var(--ocean-foam);
-    caret-color: var(--naval-gold);
-    font-family: 'Raleway';
+.modal input {
+  margin-top: 15px;
+  background-color: var(--muted);
+  border: 2px solid var(--miss-splash);
+  padding: 7px;
+  font-size: 1em;
+  width: 100%;
+  border-radius: 5px;
+  color: var(--ocean-foam);
+  caret-color: var(--naval-gold);
+  font-family: "Raleway";
 }
 
-.modal input::placeholder{
-    color: var(--muted-foreground)
+.modal input::placeholder {
+  color: var(--muted-foreground);
 }
 
-.modal input:focus{
-    border: 2px solid var(--naval-gold);
-    outline: none;
+.modal input:focus {
+  border: 2px solid var(--naval-gold);
+  outline: none;
 }
 
-::selection{
-    background-color: var(--miss-splash);
-    color: var(--foreground)
+::selection {
+  background-color: var(--miss-splash);
+  color: var(--foreground);
 }
 
-.modal button{
-    background-color: var(--miss-splash);
-    color: var(--foreground);
-    padding: 5px;
-    font-size: 1em;
-    font-family: 'Archivo';
-    width: 40%;
-    border: none;
-    margin: 0 auto;
-    cursor: pointer;
+.modal button {
+  background-color: var(--miss-splash);
+  color: var(--foreground);
+  padding: 5px;
+  font-size: 1em;
+  font-family: "Archivo";
+  width: 40%;
+  border: none;
+  margin: 0 auto;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
-.modal .error{
-    color: var(--accent);
-    font-weight: 500;
+.modal .error {
+  color: var(--accent);
+  font-weight: 500;
 }
 
-.no-scroll{
-    height: 100%;
-    overflow: hidden;
+.no-scroll {
+  height: 100%;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 80vw;
+    height: auto;
+    padding: 30px;
+
+    button {
+      margin-top: 20px;
+      width: 60%;
+    }
+  }
 }
