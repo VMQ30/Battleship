@@ -58,6 +58,11 @@ body {
   align-items: center;
 }
 
+.title svg {
+  width: clamp(30px, 5vw, 50px);
+  height: clamp(30px, 5vw, 50px);
+}
+
 body {
   background-image:
     repeating-linear-gradient(var(--border) 0 1px, transparent 1px 100%),
@@ -87,7 +92,7 @@ body {
 .main-game h4,
 .ship-placement h4 {
   font-family: "Raleway";
-  font-size: 1.4em;
+  font-size: clamp(1rem, 1.4em, 1.4em);
   font-weight: normal;
   color: var(--muted-foreground);
 }
@@ -368,6 +373,21 @@ body {
   display: flex;
   gap: 30px;
   flex-wrap: wrap;
+  flex: 1 1 auto;
+  align-items: flex-start;
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.grid-wrapper {
+  flex: 2 1 600px; /* Takes 2 parts space, prefers 600px width */
+  min-width: 300px;
+}
+
+.ship-sidebar {
+  flex: 1 1 300px; /* Takes 1 part space, prefers 300px width */
+  min-width: 250px;
 }
 
 .ship-sidebar {
@@ -541,19 +561,21 @@ body {
 }
 
 .modal {
-  width: 50vw;
-  height: 60vh;
   position: absolute;
   background-color: var(--card);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 60px 100px;
   border-radius: 10px;
   border: 2px solid var(--miss-splash);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
+
+  width: 60vw;
+  height: auto;
+  padding: 40px;
 }
 
 .modal h2,
@@ -565,6 +587,7 @@ body {
 
 .modal h3 {
   font-size: clamp(1rem, 4vw, 1.5em);
+  margin-top: 40px;
 }
 
 .modal p {
@@ -613,6 +636,11 @@ body {
   margin: 0 auto;
   cursor: pointer;
   border-radius: 5px;
+  margin-top: 40px;
+}
+
+.name-input {
+  width: 80%;
 }
 
 .modal .error {
@@ -635,5 +663,20 @@ body {
       margin-top: 20px;
       width: 60%;
     }
+
+    .name-input {
+      width: 100%;
+    }
+    h3 {
+      margin-top: 20px;
+    }
+  }
+
+  .game-details p {
+    padding: 15px;
+  }
+
+  .game-grid {
+    padding: 10px;
   }
 }
