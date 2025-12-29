@@ -26,7 +26,7 @@ function getPlayerName() {
       createErrorMessage("*Error: Name is too long");
     } else {
       closeModal();
-      const player = createPlayer("Player One");
+      const player = createPlayer(name);
       setUpGame(player);
     }
   });
@@ -67,6 +67,7 @@ function renderingBoardCells() {
   const gridSize = 11;
   const grids = document.querySelectorAll(".game-grid");
   grids.forEach((grid) => {
+    grid.innerHTML = "";
     for (let i = 0; i < gridSize; i++) {
       for (let j = 0; j < gridSize; j++) {
         createCell(i, j, grid);
@@ -137,6 +138,7 @@ function beginGame(player) {
   const playerOneMainGrid = document.querySelector(".player-one .game-grid");
 
   beginGame.addEventListener("click", () => {
+    console.log(player);
     openMainGame();
     setUpEnemyGrid(player);
     styleAllShipsOnGrid(player, playerOneMainGrid);
@@ -595,6 +597,7 @@ function enemyGrid(enemy, player, controller) {
 
   cells.forEach((cell) => {
     cell.addEventListener("click", () => {
+      console.log(enemy);
       if (!controller.canPlayerAct()) return;
 
       checkIfShipIsHit(cell, enemy, player);
@@ -605,11 +608,53 @@ function enemyGrid(enemy, player, controller) {
   });
 }
 
+function winGame(player, enemy) {
+  document.body.classList.add("no-scroll");
+
+  const modalContainer = document.querySelector(".modal-container");
+  modalContainer.style.display = "flex";
+
+  createWinningModal(player);
+  const playGame = document.querySelector(".play-again");
+
+  playGame.addEventListener("click", () => {
+    document.body.classList.remove("no-scroll");
+    modalContainer.style.display = "none";
+    fullRestart(player, enemy);
+  });
+}
+
+function fullRestart(player, enemy) {
+  player.reset();
+  enemy.reset();
+  clearMarkedShippCells();
+  openShipPlacement();
+  removeSelectedShip();
+  removeDisableShip();
+  document.querySelector(".begin-game").disabled = true;
+}
+
+function createWinningModal(player) {
+  const modal = document.querySelector(".modal");
+
+  modal.innerHTML = `
+            <div class = 'title'>
+                <svg width="50px" height="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M11 3C11 2.44772 11.4477 2 12 2C12.5523 2 13 2.44772 13 3C13 3.55228 12.5523 4 12 4C11.4477 4 11 3.55228 11 3ZM13 5.82929C14.1652 5.41746 15 4.30622 15 3C15 1.34315 13.6569 0 12 0C10.3431 0 9 1.34315 9 3C9 4.30622 9.83481 5.41746 11 5.82929V8H8C7.44772 8 7 8.44772 7 9C7 9.55228 7.44772 10 8 10H11V20.9381C7.57272 20.5107 4.81871 17.9154 4.15356 14.5678L5.29289 15.7071C5.68342 16.0976 6.31658 16.0976 6.70711 15.7071C7.09763 15.3166 7.09763 14.6834 6.70711 14.2929L3.70711 11.2929C3.42111 11.0069 2.99099 10.9213 2.61732 11.0761C2.24364 11.2309 2 11.5955 2 12V13C2 18.5228 6.47715 23 12 23C17.5228 23 22 18.5228 22 13V12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929L17.2929 14.2929C16.9024 14.6834 16.9024 15.3166 17.2929 15.7071C17.6834 16.0976 18.3166 16.0976 18.7071 15.7071L19.8464 14.5678C19.1813 17.9154 16.4273 20.5107 13 20.9381V10H16C16.5523 10 17 9.55228 17 9C17 8.44772 16.5523 8 16 8H13V5.82929Z" fill="#e6b31a"></path> </g></svg>
+                <h2 id = 'modal-title'>BATTLESHIP</h2>
+                <svg width="50px" height="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M11 3C11 2.44772 11.4477 2 12 2C12.5523 2 13 2.44772 13 3C13 3.55228 12.5523 4 12 4C11.4477 4 11 3.55228 11 3ZM13 5.82929C14.1652 5.41746 15 4.30622 15 3C15 1.34315 13.6569 0 12 0C10.3431 0 9 1.34315 9 3C9 4.30622 9.83481 5.41746 11 5.82929V8H8C7.44772 8 7 8.44772 7 9C7 9.55228 7.44772 10 8 10H11V20.9381C7.57272 20.5107 4.81871 17.9154 4.15356 14.5678L5.29289 15.7071C5.68342 16.0976 6.31658 16.0976 6.70711 15.7071C7.09763 15.3166 7.09763 14.6834 6.70711 14.2929L3.70711 11.2929C3.42111 11.0069 2.99099 10.9213 2.61732 11.0761C2.24364 11.2309 2 11.5955 2 12V13C2 18.5228 6.47715 23 12 23C17.5228 23 22 18.5228 22 13V12C22 11.5955 21.7564 11.2309 21.3827 11.0761C21.009 10.9213 20.5789 11.0069 20.2929 11.2929L17.2929 14.2929C16.9024 14.6834 16.9024 15.3166 17.2929 15.7071C17.6834 16.0976 18.3166 16.0976 18.7071 15.7071L19.8464 14.5678C19.1813 17.9154 16.4273 20.5107 13 20.9381V10H16C16.5523 10 17 9.55228 17 9C17 8.44772 16.5523 8 16 8H13V5.82929Z" fill="#e6b31a"></path> </g></svg>
+            </div>
+
+            <div class = 'name-input'>
+                <h3>${player.name} Has Won the Game!</h3>
+                <p>Play Again?</p>
+            </div>
+            <button class = 'play-again' aria-label = 'Play Game Again'>Play Game</button>`;
+}
+
 function checkIfPlayerHasNoShip(playerOne, playerTwo) {
   const hasNoShips = playerTwo.gameboard.noShips();
-  const instructions = document.querySelector(".instructions-text");
 
-  if (hasNoShips) instructions.textContent = `${playerOne.name} has won!`;
+  if (hasNoShips) winGame(playerOne, playerTwo);
 }
 
 function checkIfShipIsHit(cell, player, enemy) {

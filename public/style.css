@@ -375,8 +375,8 @@ body {
   flex-wrap: wrap;
   flex: 1 1 auto;
   align-items: flex-start;
+  max-width: 1000px;
   width: 90%;
-  max-width: 600px;
   margin: 0 auto;
 }
 

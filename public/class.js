@@ -98,7 +98,6 @@ class Player {
   }
 
   reset() {
-    this.name = "";
     this.gameboard = new Gameboard();
 
     this.mode = "hunt";
